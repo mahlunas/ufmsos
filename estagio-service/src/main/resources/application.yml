@@ -1,18 +1,12 @@
 spring:
   application:
-    name: estudos-service
+    name: estagio-service
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ufmsos
     username: postgres
     password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
 server:
-  port: 8081
+  port: 8083

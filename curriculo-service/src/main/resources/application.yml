@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: curriculo-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ufmsos
+    username: postgres
+    password: ${DB_PASSWORD:postgres}
+server:
+  port: 8086
