@@ -10,7 +10,47 @@ services:
       - "5433:5432" # Mapeado para 5433 para não conflitar com seu local (5432)
     volumes:
       - ./database/schema_inicial.sql:/docker-entrypoint-initdb.d/schema_inicial.sql
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-estudos:
@@ -23,7 +63,47 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-financeiro:
@@ -36,7 +116,47 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-estagio:
@@ -49,7 +169,47 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-saude:
@@ -62,7 +222,47 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-rotina:
@@ -75,7 +275,47 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
       - ufmsos-network
 
   ms-curriculo:
@@ -88,6 +328,86 @@ services:
       DB_PASSWORD: postgres
     depends_on:
       - ufmsos-db
+      ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+networks:
+      - ufmsos-network
+
+  ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+    depends_on:
+      - ufmsos-db
+      - ufmsos-mq
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - ufmsos-mq
     networks:
       - ufmsos-network
 

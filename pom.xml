@@ -18,6 +18,8 @@
 		<module>saude-service</module>
 		<module>rotina-service</module>
 		<module>curriculo-service</module>
+		<module>auth-service</module>
+		<module>ia-service</module>
 	</modules>
 
 	<properties>

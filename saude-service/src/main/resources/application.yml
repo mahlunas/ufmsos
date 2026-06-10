@@ -5,5 +5,11 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ufmsos
     username: postgres
     password: ${DB_PASSWORD:postgres}
+
+app:
+  security:
+    jwt:
+      secret: ufmsos-secret-key-must-be-very-long-and-secure-123456-7890
+
 server:
   port: 8084

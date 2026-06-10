@@ -8,5 +8,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+app:
+  security:
+    jwt:
+      secret: ufmsos-secret-key-must-be-very-long-and-secure-123456-7890
+
 server:
   port: 8083

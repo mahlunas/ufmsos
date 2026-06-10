@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ufmsos
+    username: postgres
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
+
+app:
+  security:
+    jwt:
+      secret: ufmsos-secret-key-must-be-very-long-and-secure-123456-7890
+      expiration: 86400000 # 24h
