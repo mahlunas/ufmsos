@@ -1,5 +1,6 @@
 package br.ufmsos.auth.infrastructure.adapter.in.web;
 
+import br.ufmsos.auth.application.usecase.AutenticarUsuarioUseCase;
 import br.ufmsos.auth.application.usecase.CadastrarUsuarioUseCase;
 import br.ufmsos.auth.domain.model.Usuario;
 import jakarta.validation.Valid;

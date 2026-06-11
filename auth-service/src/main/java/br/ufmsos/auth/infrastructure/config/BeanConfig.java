@@ -1,5 +1,6 @@
 package br.ufmsos.auth.infrastructure.config;
 
+import br.ufmsos.auth.application.usecase.AutenticarUsuarioUseCase;
 import br.ufmsos.auth.application.usecase.CadastrarUsuarioUseCase;
 import br.ufmsos.auth.domain.repository.UsuarioRepository;
 import org.springframework.context.annotation.Bean;
