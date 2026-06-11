@@ -48,6 +48,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: ufmsos-mq
     depends_on:
       - ufmsos-db
     networks:
