@@ -41,7 +41,11 @@ O sistema é dividido em 8 microserviços especializados:
 
 ### Subindo o Ambiente
 1. Clone o repositório.
-2. Compile o projeto (necessário JDK 25):
+2. Configure as credenciais de IA:
+   - Crie um arquivo `.env` na raiz do projeto (ou use o arquivo `.env` gerado).
+   - Adicione sua chave da OpenAI: `OPENAI_API_KEY=sk-....`
+   - *Para obter uma chave, acesse: [OpenAI Platform](https://platform.openai.com/api-keys)*
+3. Compile o projeto (necessário JDK 25):
    ```bash
    mvn clean install -DskipTests
    ```

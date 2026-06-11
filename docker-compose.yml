@@ -37,7 +37,7 @@ services:
     build: ./api-gateway
     container_name: api-gateway
     ports:
-      - "8000:8080" # Porta externa 8000 para o Gateway
+      - "8080:8080"
     environment:
       EUREKA_HOST: eureka-server
     depends_on:
@@ -48,6 +48,8 @@ services:
   ms-auth:
     build: ./auth-service
     container_name: ms-auth
+    ports:
+      - "8088:8088"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -61,6 +63,8 @@ services:
   ms-estudos:
     build: ./estudos-service
     container_name: ms-estudos
+    ports:
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -74,6 +78,8 @@ services:
   ms-financeiro:
     build: ./financeiro-service
     container_name: ms-financeiro
+    ports:
+      - "8082:8082"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -87,6 +93,8 @@ services:
   ms-estagio:
     build: ./estagio-service
     container_name: ms-estagio
+    ports:
+      - "8083:8083"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -100,6 +108,8 @@ services:
   ms-saude:
     build: ./saude-service
     container_name: ms-saude
+    ports:
+      - "8084:8084"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -113,6 +123,8 @@ services:
   ms-rotina:
     build: ./rotina-service
     container_name: ms-rotina
+    ports:
+      - "8085:8085"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -126,6 +138,8 @@ services:
   ms-curriculo:
     build: ./curriculo-service
     container_name: ms-curriculo
+    ports:
+      - "8086:8086"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
@@ -139,6 +153,8 @@ services:
   ms-ia:
     build: ./ia-service
     container_name: ms-ia
+    ports:
+      - "8087:8087"
     environment:
       SPRING_RABBITMQ_HOST: ufmsos-mq
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
