@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Component
+@lombok.extern.slf4j.Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Value("${app.security.jwt.secret:ufmsos-secret-key-must-be-very-long-and-secure-123456-7890}")
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (Exception e) {
-            // Token inválido ou expirado
+            log.error("Erro ao validar token JWT: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

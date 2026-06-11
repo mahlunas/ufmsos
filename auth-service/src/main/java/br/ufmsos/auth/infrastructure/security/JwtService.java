@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@lombok.extern.slf4j.Slf4j
 public class JwtService {
 
     @Value("${app.security.jwt.secret:ufmsos-secret-key-must-be-very-long-and-secure-123456}")

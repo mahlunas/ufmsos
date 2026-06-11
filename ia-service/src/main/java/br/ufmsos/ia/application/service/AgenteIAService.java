@@ -4,6 +4,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
 @Service
+@lombok.extern.slf4j.Slf4j
 public class AgenteIAService {
 
     private final ChatClient chatClient;
@@ -35,9 +36,8 @@ public class AgenteIAService {
     }
 
     public void processarSolicitacaoAssincrona(String solicitacaoJson) {
-        // Lógica para processar solicitações vindas do RabbitMQ
-        System.out.println("Processando solicitação de IA: " + solicitacaoJson);
+        log.info("Processando solicitação de IA: {}", solicitacaoJson);
         String resposta = conversar("Analise o seguinte contexto do estudante e dê uma dica curta: " + solicitacaoJson);
-        System.out.println("Resposta do Agente: " + resposta);
+        log.info("Resposta do Agente gerada com sucesso.");
     }
 }

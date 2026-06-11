@@ -1,10 +1,10 @@
-FROM container-registry.oracle.com/graalvm/native-image:23 AS build
+FROM maven:3-eclipse-temurin-25-alpine AS build
 WORKDIR /app
 COPY . .
-RUN ./mvnw --no-transfer-progress native:compile -Pnative
+RUN mvn clean package -DskipTests
 
-FROM alpine:latest
+FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /app
-COPY --from=build /app/target/saude-service saude-service
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8084
-ENTRYPOINT ["./saude-service"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
