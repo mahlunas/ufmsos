@@ -4,7 +4,7 @@ import br.ufmsos.ia.application.service.AgenteIAService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/ia")
+@RequestMapping("/ia")
 public class IaController {
 
     private final AgenteIAService agenteIAService;

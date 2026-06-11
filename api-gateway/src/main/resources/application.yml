@@ -1,9 +1,14 @@
 server:
   port: 8080
+  max-http-header-size: 16KB
 
 spring:
   application:
     name: API-GATEWAY
+  cloud:
+    gateway:
+      httpclient:
+        max-header-size: 16KB
 
 eureka:
   client:

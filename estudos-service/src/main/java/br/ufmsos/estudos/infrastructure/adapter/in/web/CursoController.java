@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller REST para o domínio de Cursos.
  */
 @RestController
-@RequestMapping("/v1/cursos")
+@RequestMapping("/cursos")
 public class CursoController {
 
     private final CadastrarCursoUseCase cadastrarCursoUseCase;

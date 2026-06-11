@@ -22,21 +22,19 @@ public class ApiGatewayApplication {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-
         org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return new org.springframework.web.cors.reactive.CorsWebFilter(source);
     }
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("auth-route", r -> r.path("/auth/**").uri("lb://AUTH-SERVICE"))
-                .route("estudos-route", r -> r.path("/estudos/**").uri("lb://ESTUDOS-SERVICE"))
-                .route("ia-route", r -> r.path("/ia/**").uri("lb://IA-SERVICE"))
-                .route("financeiro-route", r -> r.path("/financeiro/**").uri("lb://FINANCEIRO-SERVICE"))
-                .route("saude-route", r -> r.path("/saude/**").uri("lb://SAUDE-SERVICE"))
+                .route("auth-service", r -> r.path("/auth/**").uri("lb://AUTH-SERVICE"))
+                .route("estudos-service", r -> r.path("/cursos/**").uri("lb://ESTUDOS-SERVICE"))
+                .route("ia-service", r -> r.path("/ia/**").uri("lb://IA-SERVICE"))
+                .route("financeiro-service", r -> r.path("/financeiro/**").uri("lb://FINANCEIRO-SERVICE"))
+                .route("saude-service", r -> r.path("/saude/**").uri("lb://SAUDE-SERVICE"))
                 .build();
     }
 }
