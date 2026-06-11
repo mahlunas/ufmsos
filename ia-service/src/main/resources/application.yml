@@ -13,5 +13,12 @@ spring:
         options:
           model: gpt-4o
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
 server:
   port: 8087

@@ -9,6 +9,13 @@ spring:
     hibernate:
       ddl-auto: update
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
 app:
   security:
     jwt:
