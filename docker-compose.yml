@@ -1,0 +1,99 @@
+services:
+  ufmsos-db:
+    image: postgres:17-alpine
+    container_name: ufmsos-db
+    environment:
+      POSTGRES_DB: ufmsos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./database/schema_inicial.sql:/docker-entrypoint-initdb.d/schema_inicial.sql
+    networks:
+      - ufmsos-network
+
+  ufmsos-mq:
+    image: rabbitmq:4-management-alpine
+    container_name: ufmsos-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ufmsos-network
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - ufmsos-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-auth:
+    build: ./auth-service
+    container_name: ms-auth
+    ports:
+      - "8088:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-estudos:
+    build: ./estudos-service
+    container_name: ms-estudos
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-ia:
+    build: ./ia-service
+    container_name: ms-ia
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_RABBITMQ_HOST: ufmsos-mq
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-mq
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+networks:
+  ufmsos-network:
+    driver: bridge

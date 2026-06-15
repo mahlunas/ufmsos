@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  max-http-header-size: 16KB
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      httpclient:
+        max-header-size: 16KB
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

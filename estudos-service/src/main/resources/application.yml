@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: estudos-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ufmsos
+    username: postgres
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+server:
+  port: 8081
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead}
