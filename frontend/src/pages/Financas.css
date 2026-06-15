@@ -88,6 +88,7 @@
 
 .financas-card,
 .financas-chart-panel,
+.financas-category-panel,
 .financas-transactions-panel,
 .financas-form {
     border: 1px solid #dfe6ef;
@@ -159,6 +160,7 @@
 }
 
 .financas-chart-panel,
+.financas-category-panel,
 .financas-transactions-panel {
     padding: 18px;
 }

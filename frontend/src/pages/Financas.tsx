@@ -1,6 +1,7 @@
 import {useMemo, useState} from "react";
 import {ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, WalletCards} from "lucide-react";
 import Button from "../components/Button.tsx";
+import CategoryPieChart from "../components/CategoryPieChart.tsx";
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
@@ -66,6 +67,8 @@ const formVazio: TransacaoForm = {
     valor: "",
 };
 
+const coresCategorias = ["#176b5d", "#2456a6", "#8a5b00", "#6042a6", "#a51f24", "#41516a"];
+
 function formatarMoeda(valor: number) {
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -103,6 +106,23 @@ export default function Financas(){
     }, [transacoes]);
 
     const maiorValorGrafico = Math.max(resumo.receitas, resumo.despesas, 1);
+
+    const gastosPorCategoria = useMemo(() => {
+        const categorias = transacoes
+            .filter((transacao) => transacao.tipo === "despesa")
+            .reduce<Record<string, number>>((acc, transacao) => {
+                acc[transacao.categoria] = (acc[transacao.categoria] ?? 0) + transacao.valor;
+                return acc;
+            }, {});
+
+        return Object.entries(categorias)
+            .map(([label, value], index) => ({
+                label,
+                value,
+                color: coresCategorias[index % coresCategorias.length],
+            }))
+            .sort((a, b) => b.value - a.value);
+    }, [transacoes]);
 
     function abrirFormulario(tipo: TipoTransacao) {
         setForm(formVazio);
@@ -225,6 +245,11 @@ export default function Financas(){
                             <strong>{formatarMoeda(resumo.despesas)}</strong>
                         </div>
                     </div>
+                </section>
+
+                <section className="financas-category-panel">
+                    <SectionTitle title="Gastos por categoria" subtitle="Distribuição das despesas"/>
+                    <CategoryPieChart items={gastosPorCategoria} totalLabel={formatarMoeda(resumo.despesas)}/>
                 </section>
 
                 <section className="financas-transactions-panel">
