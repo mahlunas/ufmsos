@@ -4,6 +4,9 @@ import br.ufmsos.estagio.domain.model.ContratoEstagio;
 import br.ufmsos.estagio.domain.repository.ContratoEstagioRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Component
 public class JpaContratoEstagioRepositoryAdapter implements ContratoEstagioRepository {
     private final SpringDataContratoEstagioRepository repository;
@@ -24,14 +27,23 @@ public class JpaContratoEstagioRepositoryAdapter implements ContratoEstagioRepos
             contrato.ativo()
         );
         final var saved = repository.save(entity);
+        return toDomain(saved);
+    }
+
+    @Override
+    public Optional<ContratoEstagio> buscarPorId(UUID id) {
+        return repository.findById(id).map(this::toDomain);
+    }
+
+    private ContratoEstagio toDomain(ContratoEstagioEntity e) {
         return new ContratoEstagio(
-            saved.getId(), 
-            saved.getEmpresaNome(), 
-            saved.getDataInicio(), 
-            saved.getDataFim(), 
-            saved.getCargaHorariaSemanal(), 
-            saved.getEstudanteId(), 
-            saved.isAtivo()
+                e.getId(),
+                e.getEmpresaNome(),
+                e.getDataInicio(),
+                e.getDataFim(),
+                e.getCargaHorariaSemanal(),
+                e.getEstudanteId(),
+                e.isAtivo()
         );
     }
 }

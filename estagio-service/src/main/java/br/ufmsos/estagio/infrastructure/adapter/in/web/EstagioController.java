@@ -1,48 +1,59 @@
 package br.ufmsos.estagio.infrastructure.adapter.in.web;
 
+import br.ufmsos.estagio.application.usecase.ProjetarRecessoUseCase;
 import br.ufmsos.estagio.application.usecase.RegistrarContratoEstagioUseCase;
+import br.ufmsos.estagio.application.usecase.VerificarProtecaoAvaliacaoUseCase;
 import br.ufmsos.estagio.domain.model.ContratoEstagio;
+import br.ufmsos.estagio.domain.model.ProjecaoRecesso;
+import br.ufmsos.estagio.domain.repository.ContratoEstagioRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
+
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/estagios/contratos")
+@RequestMapping("/estagios")
 public class EstagioController {
 
-    private final RegistrarContratoEstagioUseCase registrarContratoEstagioUseCase;
+    private final RegistrarContratoEstagioUseCase registrarUseCase;
+    private final ProjetarRecessoUseCase recessoUseCase;
+    private final VerificarProtecaoAvaliacaoUseCase protecaoUseCase;
+    private final ContratoEstagioRepository repository;
 
-    public EstagioController(final RegistrarContratoEstagioUseCase registrarContratoEstagioUseCase) {
-        this.registrarContratoEstagioUseCase = registrarContratoEstagioUseCase;
+    public EstagioController(
+            RegistrarContratoEstagioUseCase registrarUseCase,
+            ProjetarRecessoUseCase recessoUseCase,
+            VerificarProtecaoAvaliacaoUseCase protecaoUseCase,
+            ContratoEstagioRepository repository) {
+        this.registrarUseCase = registrarUseCase;
+        this.recessoUseCase = recessoUseCase;
+        this.protecaoUseCase = protecaoUseCase;
+        this.repository = repository;
     }
 
-    @PostMapping
-    public ResponseEntity<ContratoEstagio> registrar(@RequestBody @Valid ContratoRequest request) {
-        final var contrato = new ContratoEstagio(
-            UUID.randomUUID(),
-            request.empresaNome(),
-            request.dataInicio(),
-            request.dataFim(),
-            request.cargaHorariaSemanal(),
-            request.estudanteId(),
-            true
-        );
-        final var salvo = registrarContratoEstagioUseCase.executar(contrato);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    @PostMapping("/contratos")
+    public ResponseEntity<ContratoEstagio> registrar(@RequestBody @Valid ContratoEstagio contrato) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrarUseCase.executar(contrato));
     }
 
-    public record ContratoRequest(
-        @NotBlank(message = "Nome da empresa é obrigatório") String empresaNome,
-        @NotNull(message = "Data de início é obrigatória") LocalDate dataInicio,
-        LocalDate dataFim,
-        @NotNull(message = "Carga horária é obrigatória") @Positive(message = "Carga horária deve ser positiva") @Max(value = 30, message = "Carga horária não pode exceder 30 horas") Integer cargaHorariaSemanal,
-        @NotNull(message = "ID do estudante é obrigatório") UUID estudanteId
-    ) {}
+    @GetMapping("/contratos/{id}/recesso")
+    public ResponseEntity<ProjecaoRecesso> projetarRecesso(@PathVariable UUID id) {
+        return repository.buscarPorId(id)
+                .map(contrato -> ResponseEntity.ok(recessoUseCase.executar(contrato)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/contratos/{id}/protecao")
+    public ResponseEntity<Integer> verificarCargaHoraria(@PathVariable UUID id, @RequestParam boolean isSemanaDeProvas) {
+        return repository.buscarPorId(id)
+                .map(contrato -> {
+                    if (protecaoUseCase.deveReduzirCarga(isSemanaDeProvas)) {
+                        return ResponseEntity.ok(protecaoUseCase.calcularCargaReduzida(contrato));
+                    }
+                    return ResponseEntity.ok(contrato.cargaHorariaSemanal());
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
