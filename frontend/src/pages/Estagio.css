@@ -1,0 +1,252 @@
+.estagio-page {
+    min-height: 100vh;
+    padding: 32px;
+    background: #f6f8fb;
+    color: #172033;
+}
+
+.estagio-header,
+.estagio-cards,
+.estagio-content {
+    max-width: 1180px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.estagio-header {
+    margin-bottom: 20px;
+}
+
+.estagio-header p,
+.estagio-card p,
+.estagio-section-title p,
+.estagio-contract p,
+.estagio-compliance p {
+    margin: 0;
+    color: #66758a;
+}
+
+.estagio-header p {
+    margin-bottom: 6px;
+    color: #58708f;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.estagio-header h1,
+.estagio-section-title h2,
+.estagio-contract h3,
+.estagio-compliance h2 {
+    margin: 0;
+}
+
+.estagio-header h1 {
+    font-size: 2rem;
+}
+
+.estagio-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.estagio-card,
+.estagio-contracts-panel,
+.estagio-compliance {
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.estagio-card {
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+}
+
+.estagio-card svg {
+    color: #176b5d;
+}
+
+.estagio-card strong {
+    font-size: 1.25rem;
+}
+
+.estagio-content {
+    display: grid;
+    grid-template-columns: minmax(360px, 1fr) minmax(320px, 420px);
+    gap: 18px;
+    align-items: start;
+}
+
+.estagio-contracts-panel,
+.estagio-compliance {
+    padding: 18px;
+}
+
+.estagio-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.estagio-filters {
+    display: flex;
+    gap: 6px;
+}
+
+.estagio-filters button {
+    min-height: 36px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 12px;
+    background: #edf2f7;
+    color: #41516a;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+}
+
+.estagio-filters button.is-active {
+    background: #176b5d;
+    color: #ffffff;
+}
+
+.estagio-contracts {
+    display: grid;
+    gap: 10px;
+}
+
+.estagio-contract {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    min-height: 72px;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.estagio-contract-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: #e6f3ef;
+    color: #176b5d;
+}
+
+.estagio-contract span {
+    display: block;
+    margin-top: 4px;
+    color: #41516a;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.estagio-contract strong {
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.estagio-contract strong.active {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.estagio-contract strong.finished {
+    background: #edf2f7;
+    color: #41516a;
+}
+
+.estagio-compliance {
+    display: grid;
+    gap: 14px;
+}
+
+.estagio-compliance.regular {
+    border-color: #cfe8d8;
+}
+
+.estagio-compliance.warning {
+    border-color: #f3c4c4;
+}
+
+.estagio-compliance-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+}
+
+.estagio-compliance.regular .estagio-compliance-icon {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.estagio-compliance.warning .estagio-compliance-icon {
+    background: #fde8e8;
+    color: #a51f24;
+}
+
+.estagio-compliance p {
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.estagio-compliance h2 {
+    font-size: 1.45rem;
+}
+
+.estagio-compliance-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    padding: 0 12px;
+}
+
+.estagio-compliance-details span {
+    color: #66758a;
+}
+
+@media (max-width: 980px) {
+    .estagio-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .estagio-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .estagio-page {
+        padding: 18px;
+    }
+
+    .estagio-cards,
+    .estagio-contract,
+    .estagio-section-title {
+        grid-template-columns: 1fr;
+    }
+
+    .estagio-section-title {
+        display: grid;
+    }
+
+    .estagio-filters {
+        overflow-x: auto;
+    }
+}
