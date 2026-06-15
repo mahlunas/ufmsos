@@ -1,5 +1,9 @@
 import {useMemo, useState} from "react";
 import {ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, WalletCards} from "lucide-react";
+import Button from "../components/Button.tsx";
+import MetricCard from "../components/MetricCard.tsx";
+import PageHeader from "../components/PageHeader.tsx";
+import SectionTitle from "../components/SectionTitle.tsx";
 import "./Financas.css";
 
 type TipoTransacao = "receita" | "despesa";
@@ -128,48 +132,24 @@ export default function Financas(){
 
     return (
         <section className="financas-page">
-            <header className="financas-header">
-                <div>
-                    <p>Controle financeiro</p>
-                    <h1>Finanças</h1>
-                </div>
-
-                <div className="financas-actions">
-                    <button type="button" className="financas-income-button" onClick={() => abrirFormulario("receita")}>
-                        <Plus size={18} aria-hidden="true"/>
-                        <span>Nova receita</span>
-                    </button>
-                    <button type="button" className="financas-expense-button" onClick={() => abrirFormulario("despesa")}>
-                        <Plus size={18} aria-hidden="true"/>
-                        <span>Nova despesa</span>
-                    </button>
-                </div>
-            </header>
+            <div className="financas-shell">
+                <PageHeader
+                    eyebrow="Controle financeiro"
+                    title="Finanças"
+                    actions={(
+                        <>
+                            <Button icon={Plus} variant="primary" onClick={() => abrirFormulario("receita")}>Nova receita</Button>
+                            <Button icon={Plus} variant="danger" onClick={() => abrirFormulario("despesa")}>Nova despesa</Button>
+                        </>
+                    )}
+                />
+            </div>
 
             <div className="financas-cards">
-                <article className="financas-card">
-                    <WalletCards size={22} aria-hidden="true"/>
-                    <p>Saldo Atual</p>
-                    <strong>{formatarMoeda(resumo.saldo)}</strong>
-                </article>
-
-                <article className="financas-card">
-                    <ArrowUpCircle size={22} aria-hidden="true"/>
-                    <p>Receitas do Mês</p>
-                    <strong>{formatarMoeda(resumo.receitas)}</strong>
-                </article>
-
-                <article className="financas-card">
-                    <ArrowDownCircle size={22} aria-hidden="true"/>
-                    <p>Despesas do Mês</p>
-                    <strong>{formatarMoeda(resumo.despesas)}</strong>
-                </article>
-
-                <article className="financas-card">
-                    <Landmark size={22} aria-hidden="true"/>
-                    <p>Economia Prevista</p>
-                    <strong>{formatarMoeda(resumo.economia)}</strong>
-                </article>
+                <MetricCard icon={WalletCards} label="Saldo Atual" value={formatarMoeda(resumo.saldo)}/>
+                <MetricCard icon={ArrowUpCircle} label="Receitas do Mês" value={formatarMoeda(resumo.receitas)}/>
+                <MetricCard icon={ArrowDownCircle} label="Despesas do Mês" value={formatarMoeda(resumo.despesas)}/>
+                <MetricCard icon={Landmark} label="Economia Prevista" value={formatarMoeda(resumo.economia)}/>
             </div>
 
             {formAberto && (
@@ -212,18 +192,15 @@ export default function Financas(){
                     </label>
 
                     <div className="financas-form-actions">
-                        <button type="button" onClick={salvarTransacao}>Salvar</button>
-                        <button type="button" onClick={() => setFormAberto(null)}>Cancelar</button>
+                        <Button variant="primary" onClick={salvarTransacao}>Salvar</Button>
+                        <Button onClick={() => setFormAberto(null)}>Cancelar</Button>
                     </div>
                 </div>
             )}
 
             <div className="financas-content">
                 <section className="financas-chart-panel">
-                    <div className="financas-section-title">
-                        <h2>Entradas x Saídas</h2>
-                        <p>Comparativo do mês atual</p>
-                    </div>
+                    <SectionTitle title="Entradas x Saídas" subtitle="Comparativo do mês atual"/>
 
                     <div className="financas-chart">
                         <div className="financas-chart-row">
@@ -251,10 +228,7 @@ export default function Financas(){
                 </section>
 
                 <section className="financas-transactions-panel">
-                    <div className="financas-section-title">
-                        <h2>Últimas transações</h2>
-                        <p>{transacoes.length} lançamentos cadastrados</p>
-                    </div>
+                    <SectionTitle title="Últimas transações" subtitle={`${transacoes.length} lançamentos cadastrados`}/>
 
                     <div className="financas-transactions">
                         {transacoes.map((transacao) => (

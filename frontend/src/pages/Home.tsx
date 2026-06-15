@@ -1,4 +1,7 @@
 import {AlertTriangle, BriefcaseBusiness, CalendarClock, HeartPulse, Landmark, Send, WalletCards} from "lucide-react";
+import MetricCard from "../components/MetricCard.tsx";
+import PageHeader from "../components/PageHeader.tsx";
+import SectionTitle from "../components/SectionTitle.tsx";
 import "./Home.css";
 
 const proximasEntregas = [
@@ -43,55 +46,20 @@ function formatarData(data: string) {
 export default function Home(){
     return (
         <section className="home-page">
-            <header className="home-header">
-                <div>
-                    <p>Painel inicial</p>
-                    <h1>Bem-vindo ao UFMSOS</h1>
-                </div>
-            </header>
+            <div className="home-shell">
+                <PageHeader eyebrow="Painel inicial" title="Bem-vindo ao UFMSOS"/>
+            </div>
 
             <div className="home-cards">
-                <article className="home-card">
-                    <CalendarClock size={22} aria-hidden="true"/>
-                    <p>Próxima atividade a vencer</p>
-                    <strong>Lista 4 - Recursão</strong>
-                    <span>Amanhã</span>
-                </article>
-
-                <article className="home-card">
-                    <WalletCards size={22} aria-hidden="true"/>
-                    <p>Saldo financeiro atual</p>
-                    <strong>{formatarMoeda(-96.35)}</strong>
-                    <span>Receitas menos despesas</span>
-                </article>
-
-                <article className="home-card">
-                    <HeartPulse size={22} aria-hidden="true"/>
-                    <p>Humor da semana</p>
-                    <strong>3.4 / 5</strong>
-                    <span>Média dos últimos registros</span>
-                </article>
-
-                <article className="home-card">
-                    <BriefcaseBusiness size={22} aria-hidden="true"/>
-                    <p>Estágio ativo</p>
-                    <strong>Tech Campo Grande</strong>
-                    <span>30h/semana</span>
-                </article>
-
-                <article className="home-card">
-                    <Send size={22} aria-hidden="true"/>
-                    <p>Candidaturas abertas</p>
-                    <strong>4</strong>
-                    <span>Em andamento</span>
-                </article>
+                <MetricCard icon={CalendarClock} label="Próxima atividade a vencer" value="Lista 4 - Recursão" detail="Amanhã"/>
+                <MetricCard icon={WalletCards} label="Saldo financeiro atual" value={formatarMoeda(-96.35)} detail="Receitas menos despesas"/>
+                <MetricCard icon={HeartPulse} label="Humor da semana" value="3.4 / 5" detail="Média dos últimos registros"/>
+                <MetricCard icon={BriefcaseBusiness} label="Estágio ativo" value="Tech Campo Grande" detail="30h/semana"/>
+                <MetricCard icon={Send} label="Candidaturas abertas" value="4" detail="Em andamento"/>
             </div>
 
             <section className="home-alerts">
-                <div className="home-section-title">
-                    <AlertTriangle size={21} aria-hidden="true"/>
-                    <h2>Alertas</h2>
-                </div>
+                <SectionTitle icon={AlertTriangle} title="Alertas"/>
 
                 <div className="home-alert-list">
                     {alertas.map((alerta) => (
@@ -105,10 +73,7 @@ export default function Home(){
 
             <div className="home-summary-grid">
                 <section className="home-panel">
-                    <div className="home-section-title">
-                        <Landmark size={21} aria-hidden="true"/>
-                        <h2>Últimas movimentações financeiras</h2>
-                    </div>
+                    <SectionTitle icon={Landmark} title="Últimas movimentações financeiras"/>
 
                     <div className="home-list">
                         {movimentacoesFinanceiras.map((movimentacao) => (
@@ -126,10 +91,7 @@ export default function Home(){
                 </section>
 
                 <section className="home-panel">
-                    <div className="home-section-title">
-                        <CalendarClock size={21} aria-hidden="true"/>
-                        <h2>Próximas entregas</h2>
-                    </div>
+                    <SectionTitle icon={CalendarClock} title="Próximas entregas"/>
 
                     <div className="home-list">
                         {proximasEntregas.map((entrega) => (
@@ -145,10 +107,7 @@ export default function Home(){
                 </section>
 
                 <section className="home-panel">
-                    <div className="home-section-title">
-                        <HeartPulse size={21} aria-hidden="true"/>
-                        <h2>Últimos registros de humor</h2>
-                    </div>
+                    <SectionTitle icon={HeartPulse} title="Últimos registros de humor"/>
 
                     <div className="home-list">
                         {registrosHumor.map((registro) => (

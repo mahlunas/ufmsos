@@ -1,5 +1,6 @@
 import {useMemo, useState} from "react";
 import {BarChart3, CalendarDays, HeartPulse, Save} from "lucide-react";
+import Button from "../components/Button.tsx";
 import "./Saude.css";
 
 type Humor = {
@@ -164,10 +165,9 @@ export default function Saude(){
                         />
                     </label>
 
-                    <button className="saude-save-button" type="button" onClick={salvarRegistro}>
-                        <Save size={18} aria-hidden="true"/>
-                        <span>Salvar registro</span>
-                    </button>
+                    <Button className="saude-save-button" icon={Save} variant="primary" onClick={salvarRegistro}>
+                        Salvar registro
+                    </Button>
                 </section>
 
                 <section className="saude-stats-panel">

@@ -1,0 +1,23 @@
+.metric-card {
+    display: grid;
+    gap: 8px;
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    padding: 18px;
+    background: #ffffff;
+}
+
+.metric-card svg {
+    color: #176b5d;
+}
+
+.metric-card p,
+.metric-card span {
+    margin: 0;
+    color: #66758a;
+}
+
+.metric-card strong {
+    color: #172033;
+    font-size: 1.15rem;
+}

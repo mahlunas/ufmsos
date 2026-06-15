@@ -1,5 +1,6 @@
 import {useMemo, useState} from "react";
 import {BookOpen, CalendarDays, Check, ClipboardList, FilePenLine, Plus, Save, Trash2, X} from "lucide-react";
+import Button from "../components/Button.tsx";
 import "./Estudos.css";
 
 type StatusDisciplina = "Em dia" | "Atenção" | "Atrasada";
@@ -227,10 +228,9 @@ export default function Estudos(){
                     <h1>Estudos</h1>
                 </div>
 
-                <button className="estudos-primary-button" type="button" onClick={abrirNovoCadastro}>
-                    <Plus size={18} aria-hidden="true"/>
-                    <span>Adicionar disciplina</span>
-                </button>
+                <Button className="estudos-primary-button" icon={Plus} variant="primary" onClick={abrirNovoCadastro}>
+                    Adicionar disciplina
+                </Button>
             </header>
 
             <div className="estudos-summary">

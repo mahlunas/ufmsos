@@ -1,0 +1,39 @@
+.app-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 16px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.app-button-primary {
+    background: #176b5d;
+    color: #ffffff;
+}
+
+.app-button-secondary {
+    background: #edf2f7;
+    color: #172033;
+}
+
+.app-button-danger {
+    background: #fde8e8;
+    color: #a51f24;
+}
+
+.app-button-success {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.app-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}

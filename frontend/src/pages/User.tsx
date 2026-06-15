@@ -1,5 +1,7 @@
 import {useState} from "react";
 import {Bell, LogOut, Mail, Save, ShieldCheck, UserRound} from "lucide-react";
+import Button from "../components/Button.tsx";
+import PageHeader from "../components/PageHeader.tsx";
 import "./User.css";
 
 type PerfilUsuario = {
@@ -54,17 +56,13 @@ export default function User(){
 
     return (
         <section className="user-page">
-            <header className="user-header">
-                <div>
-                    <p>Conta</p>
-                    <h1>Configurações de usuário</h1>
-                </div>
-
-                <button className="user-save-button" type="button" onClick={salvarConfiguracoes}>
-                    <Save size={18} aria-hidden="true"/>
-                    <span>Salvar</span>
-                </button>
-            </header>
+            <div className="user-shell">
+                <PageHeader
+                    eyebrow="Conta"
+                    title="Configurações de usuário"
+                    actions={<Button className="user-save-button" icon={Save} variant="primary" onClick={salvarConfiguracoes}>Salvar</Button>}
+                />
+            </div>
 
             {mensagem && <p className="user-message">{mensagem}</p>}
 
@@ -168,10 +166,9 @@ export default function User(){
                         </div>
                     </div>
 
-                    <button className="user-logout-button" type="button" onClick={sair}>
-                        <LogOut size={18} aria-hidden="true"/>
-                        <span>Sair da conta</span>
-                    </button>
+                    <Button className="user-logout-button" icon={LogOut} variant="danger" onClick={sair}>
+                        Sair da conta
+                    </Button>
                 </section>
             </div>
         </section>

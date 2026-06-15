@@ -1,5 +1,6 @@
 import {useMemo, useState} from "react";
 import {ArrowRight, Building2, CalendarDays, CheckCircle2, Plus, Send, XCircle} from "lucide-react";
+import Button from "../components/Button.tsx";
 import "./Candidaturas.css";
 
 type EtapaCandidatura = "Aplicando" | "Triagem" | "Entrevista" | "Teste Técnico" | "Aprovado" | "Rejeitado";
@@ -148,10 +149,9 @@ export default function Candidaturas(){
                     <h1>Candidaturas</h1>
                 </div>
 
-                <button type="button" className="candidaturas-primary-button" onClick={() => setFormAberto(true)}>
-                    <Plus size={18} aria-hidden="true"/>
-                    <span>Nova candidatura</span>
-                </button>
+                <Button className="candidaturas-primary-button" icon={Plus} variant="primary" onClick={() => setFormAberto(true)}>
+                    Nova candidatura
+                </Button>
             </header>
 
             {formAberto && (
@@ -193,8 +193,8 @@ export default function Candidaturas(){
                     </label>
 
                     <div className="candidaturas-form-actions">
-                        <button type="button" onClick={salvarCandidatura}>Salvar</button>
-                        <button type="button" onClick={() => setFormAberto(false)}>Cancelar</button>
+                        <Button variant="primary" onClick={salvarCandidatura}>Salvar</Button>
+                        <Button onClick={() => setFormAberto(false)}>Cancelar</Button>
                     </div>
                 </div>
             )}
@@ -228,22 +228,19 @@ export default function Candidaturas(){
                                     {!["Aprovado", "Rejeitado"].includes(candidatura.etapa) && (
                                         <div className="candidaturas-decision-actions">
                                             {candidatura.etapa === "Teste Técnico" ? (
-                                                <button type="button" className="candidaturas-approve-button" onClick={() => moverCandidatura(candidatura.id, "Aprovado")}>
-                                                    <CheckCircle2 size={16} aria-hidden="true"/>
-                                                    <span>Aprovado</span>
-                                                </button>
+                                                <Button className="candidaturas-approve-button" icon={CheckCircle2} variant="success" onClick={() => moverCandidatura(candidatura.id, "Aprovado")}>
+                                                    Aprovado
+                                                </Button>
                                             ) : (
-                                                <button type="button" className="candidaturas-next-button" onClick={() => avancarCandidatura(candidatura.id, candidatura.etapa)}>
-                                                    <Send size={16} aria-hidden="true"/>
-                                                    <span>Avançar</span>
+                                                <Button className="candidaturas-next-button" icon={Send} onClick={() => avancarCandidatura(candidatura.id, candidatura.etapa)}>
+                                                    Avançar
                                                     <ArrowRight size={15} aria-hidden="true"/>
-                                                </button>
+                                                </Button>
                                             )}
 
-                                            <button type="button" className="candidaturas-reject-button" onClick={() => moverCandidatura(candidatura.id, "Rejeitado")}>
-                                                <XCircle size={16} aria-hidden="true"/>
-                                                <span>Rejeitado</span>
-                                            </button>
+                                            <Button className="candidaturas-reject-button" icon={XCircle} variant="danger" onClick={() => moverCandidatura(candidatura.id, "Rejeitado")}>
+                                                Rejeitado
+                                            </Button>
                                         </div>
                                     )}
                                 </article>

@@ -1,0 +1,19 @@
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.section-title svg {
+    color: #176b5d;
+}
+
+.section-title h2 {
+    margin: 0;
+}
+
+.section-title p {
+    margin: 4px 0 0;
+    color: #66758a;
+}

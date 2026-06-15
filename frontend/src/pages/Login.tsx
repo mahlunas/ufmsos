@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import type {FormEvent} from "react";
 import {useNavigate} from "react-router-dom";
 import {LOCAL_BYPASS_TOKEN, LOGIN_BYPASS_ENABLED} from "../auth.ts";
+import Button from "../components/Button.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
@@ -97,12 +98,12 @@ export default function Login(){
 
                 {erro && <p>{erro}</p>}
 
-                <button type="submit" disabled={carregando}>
+                <Button type="submit" variant="primary" disabled={carregando}>
                     {carregando ? "Entrando..." : "Entrar"}
-                </button>
+                </Button>
             </form>
             <p>Não possui uma conta?</p>
-            <button type="button">Cadastrar-se</button>
+            <Button>Cadastrar-se</Button>
         </div>
     )
 }
