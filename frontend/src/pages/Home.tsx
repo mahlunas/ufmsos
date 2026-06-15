@@ -1,6 +1,3 @@
-import Sidebar from "../components/Sidebar.tsx";
-import Card from "../components/Card.tsx";
-
 export default function Home(){
     return (
         <div>

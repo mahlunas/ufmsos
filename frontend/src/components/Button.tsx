@@ -1,6 +1,12 @@
-import {Icon} from "lucide-react";
+import type {ComponentType, MouseEventHandler} from "react";
 
-export default function Button({text, icon:Icon, onClick}){
+type ButtonProps = {
+    text: string;
+    icon?: ComponentType;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+}
+
+export default function Button({text, icon:Icon, onClick}: ButtonProps){
     return (
         <button onClick={onClick}>
             {Icon && <Icon/>}

@@ -1,12 +1,15 @@
 import Sidebar from "../components/Sidebar.tsx";
 import {Outlet} from "react-router-dom";
+import "./MainLayout.css";
 
 export default function MainLayout(){
     return (
-        <div>
-            <aside><Sidebar/></aside>
-            
-            <main>
+        <div className="app-layout">
+            <aside className="app-sidebar">
+                <Sidebar/>
+            </aside>
+
+            <main className="app-main">
                 <Outlet/>
             </main>
         </div>

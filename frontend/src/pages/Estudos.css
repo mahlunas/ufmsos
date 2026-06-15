@@ -1,0 +1,392 @@
+.estudos-page {
+    min-height: 100vh;
+    padding: 32px;
+    background: #f6f8fb;
+    color: #172033;
+}
+
+.estudos-header,
+.estudos-content,
+.estudos-form,
+.estudos-summary {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.estudos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.estudos-kicker {
+    margin: 0 0 6px;
+    color: #58708f;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.estudos-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.estudos-primary-button,
+.estudos-icon-button,
+.estudos-card-actions button,
+.estudos-tabs button {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.estudos-primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    background: #176b5d;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.estudos-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.estudos-summary div {
+    padding: 16px;
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.estudos-summary span {
+    display: block;
+    font-size: 1.7rem;
+    font-weight: 800;
+}
+
+.estudos-summary p,
+.estudos-disciplina p,
+.estudos-details-header p,
+.estudos-detail-row p {
+    margin: 0;
+    color: #66758a;
+}
+
+.estudos-form {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 0.9fr 0.8fr auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 18px;
+    padding: 16px;
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.estudos-form label {
+    display: grid;
+    gap: 6px;
+    color: #41516a;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.estudos-form input,
+.estudos-form select {
+    min-height: 40px;
+    border: 1px solid #c9d3e0;
+    border-radius: 8px;
+    padding: 0 10px;
+    color: #172033;
+    background: #ffffff;
+    font: inherit;
+}
+
+.estudos-form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.estudos-icon-button {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #edf2f7;
+    color: #172033;
+}
+
+.estudos-content {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 440px);
+    gap: 18px;
+    align-items: start;
+}
+
+.estudos-list {
+    display: grid;
+    gap: 12px;
+}
+
+.estudos-disciplina,
+.estudos-details {
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.estudos-disciplina {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.estudos-disciplina.is-active {
+    border-color: #176b5d;
+    box-shadow: 0 0 0 3px rgba(23, 107, 93, 0.12);
+}
+
+.estudos-disciplina-main {
+    display: flex;
+    gap: 12px;
+    min-width: 0;
+}
+
+.estudos-disciplina-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: #e6f3ef;
+    color: #176b5d;
+}
+
+.estudos-disciplina h2,
+.estudos-details h2,
+.estudos-detail-row h3 {
+    margin: 0;
+}
+
+.estudos-disciplina h2 {
+    font-size: 1.04rem;
+}
+
+.estudos-disciplina-meta,
+.estudos-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.estudos-disciplina-meta {
+    justify-content: space-between;
+    padding-right: 80px;
+}
+
+.estudos-disciplina-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #41516a;
+}
+
+.estudos-status {
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+}
+
+.status-em-dia {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.status-atencao {
+    background: #fff3d7;
+    color: #8a5b00;
+}
+
+.status-atrasada {
+    background: #fde8e8;
+    color: #a51f24;
+}
+
+.estudos-card-actions {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+}
+
+.estudos-card-actions button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #edf2f7;
+    color: #41516a;
+}
+
+.estudos-details {
+    position: sticky;
+    top: 20px;
+    padding: 18px;
+}
+
+.estudos-details-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.estudos-details-header p {
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.estudos-details-header span {
+    color: #66758a;
+}
+
+.estudos-details-header strong {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 58px;
+    height: 58px;
+    border-radius: 8px;
+    background: #172033;
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.estudos-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.estudos-tabs button {
+    min-height: 36px;
+    border-radius: 8px;
+    background: #edf2f7;
+    color: #41516a;
+    font-weight: 700;
+}
+
+.estudos-tabs button.is-active {
+    background: #176b5d;
+    color: #ffffff;
+}
+
+.estudos-detail-list {
+    display: grid;
+    gap: 10px;
+}
+
+.estudos-detail-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+    min-height: 58px;
+    padding: 12px;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+}
+
+.estudos-detail-row svg {
+    color: #176b5d;
+}
+
+.estudos-detail-row h3 {
+    font-size: 0.95rem;
+}
+
+.estudos-detail-row span {
+    color: #172033;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.estudos-empty {
+    margin: 0;
+    padding: 18px;
+    color: #66758a;
+    text-align: center;
+}
+
+@media (max-width: 920px) {
+    .estudos-page {
+        padding: 20px;
+    }
+
+    .estudos-header,
+    .estudos-content,
+    .estudos-form {
+        grid-template-columns: 1fr;
+    }
+
+    .estudos-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .estudos-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .estudos-details {
+        position: static;
+    }
+}
+
+@media (max-width: 560px) {
+    .estudos-page {
+        padding: 14px;
+    }
+
+    .estudos-tabs {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .estudos-disciplina-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-right: 0;
+    }
+
+    .estudos-card-actions {
+        position: static;
+        justify-content: flex-end;
+    }
+
+    .estudos-detail-row {
+        grid-template-columns: auto 1fr;
+    }
+
+    .estudos-detail-row span {
+        grid-column: 2;
+    }
+}
