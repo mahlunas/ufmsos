@@ -12,7 +12,7 @@ public record LancamentoFinanceiro(
     UUID id,
     String descricao,
     BigDecimal valor,
-    TipoLancamento tipo,
+    TipoLancamentoEnum tipo,
     LocalDate dataPagamento,
     UUID estudanteId,
     UUID categoriaId
@@ -25,8 +25,4 @@ public record LancamentoFinanceiro(
             throw new IllegalArgumentException("A descrição é obrigatória.");
         }
     }
-}
-
-enum TipoLancamento {
-    RECEITA, DESPESA
 }

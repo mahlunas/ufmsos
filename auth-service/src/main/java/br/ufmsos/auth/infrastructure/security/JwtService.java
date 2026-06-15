@@ -16,7 +16,7 @@ import java.util.Map;
 @lombok.extern.slf4j.Slf4j
 public class JwtService {
 
-    @Value("${app.security.jwt.secret:ufmsos-secret-key-must-be-very-long-and-secure-123456}")
+    @Value("${app.security.jwt.secret:ufmsos-secret-key-must-be-very-long-and-secure-123456-7890}")
     private String secretKey;
 
     @Value("${app.security.jwt.expiration:86400000}") // 24 hours

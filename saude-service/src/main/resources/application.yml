@@ -16,7 +16,7 @@ eureka:
 app:
   security:
     jwt:
-      secret: ufmsos-secret-key-must-be-very-long-and-secure-123456-7890
+      secret: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
 
 server:
   port: 8084

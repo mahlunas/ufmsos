@@ -40,6 +40,7 @@ services:
       - "8080:8080"
     environment:
       EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
     depends_on:
       - eureka-server
     networks:
@@ -49,11 +50,12 @@ services:
     build: ./auth-service
     container_name: ms-auth
     ports:
-      - "8088:8088"
+      - "8088:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
       EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
     depends_on:
       - ufmsos-db
       - eureka-server
@@ -69,6 +71,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
       EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
     depends_on:
       - ufmsos-db
       - eureka-server
@@ -84,6 +87,7 @@ services:
       SPRING_RABBITMQ_HOST: ufmsos-mq
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
     depends_on:
       - ufmsos-mq
       - eureka-server

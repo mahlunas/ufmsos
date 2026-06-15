@@ -6,6 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -16,25 +19,28 @@ public class ApiGatewayApplication {
     }
 
     @Bean
-    public org.springframework.web.cors.reactive.CorsWebFilter corsFilter() {
-        org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
+    public CorsWebFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new org.springframework.web.cors.reactive.CorsWebFilter(source);
+        return new CorsWebFilter(source);
     }
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("auth-service", r -> r.path("/auth/**").uri("lb://AUTH-SERVICE"))
-                .route("estudos-service", r -> r.path("/cursos/**").uri("lb://ESTUDOS-SERVICE"))
-                .route("ia-service", r -> r.path("/ia/**").uri("lb://IA-SERVICE"))
-                .route("financeiro-service", r -> r.path("/financeiro/**").uri("lb://FINANCEIRO-SERVICE"))
-                .route("saude-service", r -> r.path("/saude/**").uri("lb://SAUDE-SERVICE"))
+                .route("auth-service", r -> r.path("/auth/**", "/auth").uri("lb://AUTH-SERVICE"))
+                .route("estudos-service", r -> r.path("/estudos/**", "/estudos").uri("lb://ESTUDOS-SERVICE"))
+                .route("disciplinas-service", r -> r.path("/disciplinas/**", "/disciplinas").uri("lb://ESTUDOS-SERVICE"))
+                .route("avaliacoes-service", r -> r.path("/avaliacoes/**", "/avaliacoes").uri("lb://ESTUDOS-SERVICE"))
+                .route("revisoes-service", r -> r.path("/revisoes/**", "/revisoes").uri("lb://ESTUDOS-SERVICE"))
+                .route("ia-service", r -> r.path("/ia/**", "/ia").uri("lb://IA-SERVICE"))
+                .route("financeiro-service", r -> r.path("/financeiro/**", "/financeiro").uri("lb://FINANCEIRO-SERVICE"))
+                .route("saude-service", r -> r.path("/saude/**", "/saude").uri("lb://SAUDE-SERVICE"))
                 .build();
     }
 }
