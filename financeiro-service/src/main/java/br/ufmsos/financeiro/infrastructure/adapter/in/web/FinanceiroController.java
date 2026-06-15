@@ -1,49 +1,51 @@
 package br.ufmsos.financeiro.infrastructure.adapter.in.web;
 
-import br.ufmsos.financeiro.application.usecase.RegistrarLancamentoUseCase;
-import br.ufmsos.financeiro.domain.model.LancamentoFinanceiro;
+import br.ufmsos.financeiro.application.usecase.*;
+import br.ufmsos.financeiro.domain.model.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/financeiro/lancamentos")
+@RequestMapping("/financeiro")
 public class FinanceiroController {
 
     private final RegistrarLancamentoUseCase registrarLancamentoUseCase;
+    private final GerenciarCategoriasUseCase categoriasUseCase;
+    private final ConsultarResumoFinanceiroUseCase resumoUseCase;
 
-    public FinanceiroController(final RegistrarLancamentoUseCase registrarLancamentoUseCase) {
+    public FinanceiroController(
+            RegistrarLancamentoUseCase registrarLancamentoUseCase,
+            GerenciarCategoriasUseCase categoriasUseCase,
+            ConsultarResumoFinanceiroUseCase resumoUseCase) {
         this.registrarLancamentoUseCase = registrarLancamentoUseCase;
+        this.categoriasUseCase = categoriasUseCase;
+        this.resumoUseCase = resumoUseCase;
     }
 
-    @PostMapping
-    public ResponseEntity<LancamentoFinanceiro> registrar(@RequestBody @Valid LancamentoRequest request) {
-        final var lancamento = new LancamentoFinanceiro(
-            UUID.randomUUID(),
-            request.descricao(),
-            request.valor(),
-            request.tipo(),
-            request.dataPagamento() != null ? request.dataPagamento() : LocalDate.now(),
-            request.estudanteId(),
-            request.categoriaId()
-        );
-        final var salvo = registrarLancamentoUseCase.executar(lancamento);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    @PostMapping("/lancamentos")
+    public ResponseEntity<LancamentoFinanceiro> registrar(@RequestBody @Valid LancamentoFinanceiro lancamento) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrarLancamentoUseCase.executar(lancamento));
     }
 
-    public record LancamentoRequest(
-        @NotBlank(message = "Descrição é obrigatória") String descricao,
-        @NotNull(message = "Valor é obrigatório") @Positive(message = "O valor deve ser positivo") BigDecimal valor,
-        @NotNull(message = "Tipo é obrigatório") br.ufmsos.financeiro.domain.model.TipoLancamentoEnum tipo,
-        LocalDate dataPagamento,
-        @NotNull(message = "ID do estudante é obrigatório") UUID estudanteId,
-        UUID categoriaId
-    ) {}
+    @GetMapping("/resumo/{estudanteId}")
+    public ResumoFinanceiro obterResumo(@PathVariable UUID estudanteId) {
+        return resumoUseCase.executar(estudanteId);
+    }
+
+    @PostMapping("/categorias")
+    public CategoriaFinanceira criarCategoria(@RequestBody CategoriaRequest request) {
+        return categoriasUseCase.cadastrar(request.nome(), request.cor());
+    }
+
+    @GetMapping("/categorias")
+    public List<CategoriaFinanceira> listarCategorias() {
+        return categoriasUseCase.listar();
+    }
+
+    public record CategoriaRequest(String nome, String cor) {}
 }

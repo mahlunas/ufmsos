@@ -1,8 +1,14 @@
 package br.ufmsos.financeiro.infrastructure.adapter.out.persistence;
 
 import br.ufmsos.financeiro.domain.model.LancamentoFinanceiro;
+import br.ufmsos.financeiro.domain.model.TipoLancamentoEnum;
 import br.ufmsos.financeiro.domain.repository.LancamentoRepository;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class JpaLancamentoRepositoryAdapter implements LancamentoRepository {
@@ -13,25 +19,43 @@ public class JpaLancamentoRepositoryAdapter implements LancamentoRepository {
     }
 
     @Override
-    public LancamentoFinanceiro salvar(LancamentoFinanceiro lancamento) {
+    public LancamentoFinanceiro salvar(LancamentoFinanceiro l) {
         final var entity = new LancamentoEntity(
-            lancamento.id(), 
-            lancamento.descricao(), 
-            lancamento.valor(), 
-            "RECEITA", // Simplificado
-            lancamento.dataPagamento(), 
-            lancamento.estudanteId(), 
-            lancamento.categoriaId()
+            l.id(), 
+            l.descricao(), 
+            l.valor(), 
+            l.tipo().name(), 
+            l.dataPagamento(), 
+            l.estudanteId(), 
+            l.categoriaId()
         );
         final var saved = repository.save(entity);
+        return toDomain(saved);
+    }
+
+    @Override
+    public List<LancamentoFinanceiro> listarPorEstudante(UUID estudanteId) {
+        return repository.findByEstudanteId(estudanteId).stream()
+                .map(this::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LancamentoFinanceiro> listarPorEstudanteEPiodo(UUID estudanteId, LocalDate inicio, LocalDate fim) {
+        return repository.findByEstudanteIdAndDataPagamentoBetween(estudanteId, inicio, fim).stream()
+                .map(this::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    private LancamentoFinanceiro toDomain(LancamentoEntity e) {
         return new LancamentoFinanceiro(
-            saved.getId(), 
-            saved.getDescricao(), 
-            saved.getValor(), 
-            null, // tipo enum
-            saved.getDataPagamento(), 
-            saved.getEstudanteId(), 
-            saved.getCategoriaId()
+                e.getId(),
+                e.getDescricao(),
+                e.getValor(),
+                TipoLancamentoEnum.valueOf(e.getTipo()),
+                e.getDataPagamento(),
+                e.getEstudanteId(),
+                e.getCategoriaId()
         );
     }
 }
