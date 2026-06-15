@@ -1,10 +1,9 @@
 import {useEffect, useState} from "react";
 import type {FormEvent} from "react";
 import {useNavigate} from "react-router-dom";
-import {LOCAL_BYPASS_TOKEN, LOGIN_BYPASS_ENABLED} from "../auth.ts";
 import Button from "../components/Button.tsx";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function Login(){
     const navigate = useNavigate();
@@ -22,12 +21,6 @@ export default function Login(){
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setErro("");
-
-        if (LOGIN_BYPASS_ENABLED) {
-            localStorage.setItem("ufmsos.token", LOCAL_BYPASS_TOKEN);
-            navigate("/home");
-            return;
-        }
 
         if (!email.trim() || !senha.trim()) {
             setErro("Informe e-mail e senha.");
@@ -75,7 +68,7 @@ export default function Login(){
     }
 
     return(
-        <div>
+        <div class-name="">
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">E-mail</label>

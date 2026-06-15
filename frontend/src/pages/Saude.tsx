@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {BarChart3, CalendarDays, HeartPulse, Save} from "lucide-react";
 import Button from "../components/Button.tsx";
-import "./Saude.css";
+import "../styles/Saude.css";
 
 type Humor = {
     id: number;

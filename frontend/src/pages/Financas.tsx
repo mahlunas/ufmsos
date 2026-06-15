@@ -5,7 +5,7 @@ import CategoryPieChart from "../components/CategoryPieChart.tsx";
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
-import "./Financas.css";
+import "../styles/Financas.css";
 
 type TipoTransacao = "receita" | "despesa";
 

@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar.tsx";
 import {Outlet} from "react-router-dom";
-import "./MainLayout.css";
+import "../styles/MainLayout.css";
 
 export default function MainLayout(){
     return (

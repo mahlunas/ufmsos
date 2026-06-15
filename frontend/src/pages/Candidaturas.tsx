@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {ArrowRight, Building2, CalendarDays, CheckCircle2, Plus, Send, XCircle} from "lucide-react";
 import Button from "../components/Button.tsx";
-import "./Candidaturas.css";
+import "../styles/Candidaturas.css";
 
 type EtapaCandidatura = "Aplicando" | "Triagem" | "Entrevista" | "Teste Técnico" | "Aprovado" | "Rejeitado";
 

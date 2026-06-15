@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {BookOpen, CalendarDays, Check, ClipboardList, FilePenLine, Plus, Save, Trash2, X} from "lucide-react";
 import Button from "../components/Button.tsx";
-import "./Estudos.css";
+import "../styles/Estudos.css";
 
 type StatusDisciplina = "Em dia" | "Atenção" | "Atrasada";
 

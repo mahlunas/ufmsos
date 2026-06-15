@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Bell, LogOut, Mail, Save, ShieldCheck, UserRound} from "lucide-react";
 import Button from "../components/Button.tsx";
 import PageHeader from "../components/PageHeader.tsx";
-import "./User.css";
+import "../styles/User.css";
 
 type PerfilUsuario = {
     nome: string;

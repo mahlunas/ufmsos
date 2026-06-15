@@ -8,12 +8,11 @@ import Candidaturas from "../pages/Candidaturas.tsx";
 import Financas from "../pages/Financas.tsx";
 import Estudos from "../pages/Estudos.tsx";
 import MainLayout from "../pages/MainLayout.tsx";
-import {LOGIN_BYPASS_ENABLED} from "../auth.ts";
 
 function ProtectedRoute() {
     const token = localStorage.getItem("ufmsos.token");
 
-    if (!LOGIN_BYPASS_ENABLED && !token) {
+    if (!token) {
         return <Navigate to="/" replace/>;
     }
 

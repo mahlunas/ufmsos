@@ -2,7 +2,7 @@ import {AlertTriangle, BriefcaseBusiness, CalendarClock, HeartPulse, Landmark, S
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
-import "./Home.css";
+import "../styles/Home.css";
 
 const proximasEntregas = [
     {titulo: "Lista 4 - Recursão", disciplina: "Algoritmos e Programação", data: "2026-06-16"},

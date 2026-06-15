@@ -1,6 +1,6 @@
 import {useMemo, useState} from "react";
 import {AlertTriangle, BriefcaseBusiness, CalendarCheck, CheckCircle2, Clock, Coins, FileText} from "lucide-react";
-import "./Estagio.css";
+import "../styles/Estagio.css";
 
 type StatusContrato = "Ativo" | "Finalizado";
 
