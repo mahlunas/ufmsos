@@ -15,16 +15,23 @@ import java.util.UUID;
 public class AvaliacaoController {
     private final RegistrarAvaliacaoUseCase registrarUseCase;
     private final LancarNotaUseCase lancarNotaUseCase;
+    private final br.ufmsos.estudos.application.usecase.ListarAvaliacoesUseCase listarUseCase;
 
-    public AvaliacaoController(RegistrarAvaliacaoUseCase registrarUseCase, LancarNotaUseCase lancarNotaUseCase) {
+    public AvaliacaoController(RegistrarAvaliacaoUseCase registrarUseCase, LancarNotaUseCase lancarNotaUseCase, br.ufmsos.estudos.application.usecase.ListarAvaliacoesUseCase listarUseCase) {
         this.registrarUseCase = registrarUseCase;
         this.lancarNotaUseCase = lancarNotaUseCase;
+        this.listarUseCase = listarUseCase;
     }
 
     @PostMapping
     public ResponseEntity<Avaliacao> registrar(@RequestBody @Valid AvaliacaoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(registrarUseCase.executar(request.nome(), request.data(), request.estudanteId(), request.disciplinaId()));
+    }
+
+    @GetMapping
+    public ResponseEntity<java.util.List<Avaliacao>> listar() {
+        return ResponseEntity.ok(listarUseCase.executar());
     }
 
     @PatchMapping("/{id}/nota")

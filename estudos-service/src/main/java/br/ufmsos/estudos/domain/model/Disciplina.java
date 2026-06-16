@@ -10,8 +10,14 @@ public record Disciplina(
     String nome,
     String codigo,
     Integer cargaHoraria,
-    UUID cursoId
+    UUID cursoId,
+    Integer semestre,
+    String preRequisito
 ) {
+    public Disciplina(UUID id, String nome, String codigo, Integer cargaHoraria, UUID cursoId) {
+        this(id, nome, codigo, cargaHoraria, cursoId, 1, null);
+    }
+
     public Disciplina {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("O nome da disciplina é obrigatório.");

@@ -1,6 +1,7 @@
 package br.ufmsos.saude.infrastructure.adapter.in.web;
 
 import br.ufmsos.saude.application.usecase.AnalisarRiscoSaudeUseCase;
+import br.ufmsos.saude.application.usecase.ConsultarRegistrosUseCase;
 import br.ufmsos.saude.application.usecase.RegistrarBemEstarUseCase;
 import br.ufmsos.saude.domain.model.RegistroBemEstar;
 import br.ufmsos.saude.domain.model.RiscoBurnout;
@@ -16,10 +17,15 @@ import java.util.UUID;
 public class SaudeController {
     private final RegistrarBemEstarUseCase registrarUseCase;
     private final AnalisarRiscoSaudeUseCase analisarUseCase;
+    private final ConsultarRegistrosUseCase consultarRegistrosUseCase;
 
-    public SaudeController(RegistrarBemEstarUseCase registrarUseCase, AnalisarRiscoSaudeUseCase analisarUseCase) {
+    public SaudeController(
+            RegistrarBemEstarUseCase registrarUseCase, 
+            AnalisarRiscoSaudeUseCase analisarUseCase,
+            ConsultarRegistrosUseCase consultarRegistrosUseCase) {
         this.registrarUseCase = registrarUseCase;
         this.analisarUseCase = analisarUseCase;
+        this.consultarRegistrosUseCase = consultarRegistrosUseCase;
     }
 
     @PostMapping("/registros")
@@ -30,5 +36,15 @@ public class SaudeController {
     @GetMapping("/analise/{estudanteId}")
     public ResponseEntity<RiscoBurnout> analisarRisco(@PathVariable UUID estudanteId) {
         return ResponseEntity.ok(analisarUseCase.executar(estudanteId));
+    }
+
+    @GetMapping("/registros/{estudanteId}")
+    public ResponseEntity<java.util.List<RegistroBemEstar>> listarRegistros(@PathVariable String estudanteId) {
+        try {
+            UUID id = UUID.fromString(estudanteId);
+            return ResponseEntity.ok(consultarRegistrosUseCase.executar(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

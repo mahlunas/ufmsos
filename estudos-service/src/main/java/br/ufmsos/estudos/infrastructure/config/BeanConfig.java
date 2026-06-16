@@ -32,4 +32,37 @@ public class BeanConfig {
     public AgendarRevisaoUseCase agendarRevisaoUseCase(final RevisaoRepository repository) {
         return new AgendarRevisaoUseCase(repository);
     }
+
+    @Bean
+    public ListarCursosUseCase listarCursosUseCase(final CursoRepository repository) {
+        return new ListarCursosUseCase(repository);
+    }
+
+    @Bean
+    public ListarDisciplinasUseCase listarDisciplinasUseCase(final DisciplinaRepository repository) {
+        return new ListarDisciplinasUseCase(repository);
+    }
+
+    @Bean
+    public ListarAvaliacoesUseCase listarAvaliacoesUseCase(final AvaliacaoRepository repository) {
+        return new ListarAvaliacoesUseCase(repository);
+    }
+
+    @Bean
+    public ConsultarGradeCurricularUseCase consultarGradeCurricularUseCase(
+            final EstudanteRepository estudanteRepository,
+            final DisciplinaRepository disciplinaRepository,
+            final AvaliacaoRepository avaliacaoRepository) {
+        return new ConsultarGradeCurricularUseCase(estudanteRepository, disciplinaRepository, avaliacaoRepository);
+    }
+
+    @Bean
+    public AtualizarEstudanteUseCase atualizarEstudanteUseCase(final EstudanteRepository repository) {
+        return new AtualizarEstudanteUseCase(repository);
+    }
+
+    @Bean
+    public ToggleConclusaoDisciplinaUseCase toggleConclusaoDisciplinaUseCase(final AvaliacaoRepository repository) {
+        return new ToggleConclusaoDisciplinaUseCase(repository);
+    }
 }

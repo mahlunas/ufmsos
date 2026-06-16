@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface SpringDataContratoEstagioRepository extends JpaRepository<ContratoEstagioEntity, UUID> {
+    java.util.List<ContratoEstagioEntity> findByEstudanteId(UUID estudanteId);
 }

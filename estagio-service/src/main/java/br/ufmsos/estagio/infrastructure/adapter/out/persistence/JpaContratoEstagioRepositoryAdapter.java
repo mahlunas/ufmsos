@@ -35,6 +35,13 @@ public class JpaContratoEstagioRepositoryAdapter implements ContratoEstagioRepos
         return repository.findById(id).map(this::toDomain);
     }
 
+    @Override
+    public java.util.List<ContratoEstagio> buscarPorEstudante(UUID estudanteId) {
+        return repository.findByEstudanteId(estudanteId).stream()
+                .map(this::toDomain)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private ContratoEstagio toDomain(ContratoEstagioEntity e) {
         return new ContratoEstagio(
                 e.getId(),

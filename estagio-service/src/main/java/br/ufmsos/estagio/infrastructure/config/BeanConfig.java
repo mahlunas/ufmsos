@@ -22,4 +22,9 @@ public class BeanConfig {
     public VerificarProtecaoAvaliacaoUseCase verificarProtecaoAvaliacaoUseCase() {
         return new VerificarProtecaoAvaliacaoUseCase();
     }
+
+    @Bean
+    public ListarContratosUseCase listarContratosUseCase(ContratoEstagioRepository repository) {
+        return new ListarContratosUseCase(repository);
+    }
 }
