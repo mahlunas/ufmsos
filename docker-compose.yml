@@ -78,6 +78,86 @@ services:
     networks:
       - ufmsos-network
 
+  ms-financeiro:
+    build: ./financeiro-service
+    container_name: ms-financeiro
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-estagio:
+    build: ./estagio-service
+    container_name: ms-estagio
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-saude:
+    build: ./saude-service
+    container_name: ms-saude
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-rotina:
+    build: ./rotina-service
+    container_name: ms-rotina
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
+  ms-curriculo:
+    build: ./curriculo-service
+    container_name: ms-curriculo
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
+      DB_PASSWORD: postgres
+      EUREKA_HOST: eureka-server
+      JWT_SECRET: 5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead
+    depends_on:
+      - ufmsos-db
+      - eureka-server
+    networks:
+      - ufmsos-network
+
   ms-ia:
     build: ./ia-service
     container_name: ms-ia
