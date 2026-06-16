@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface SpringDataAvaliacaoRepository extends JpaRepository<AvaliacaoEntity, UUID> {
     List<AvaliacaoEntity> findByEstudanteIdAndDisciplinaId(UUID estudanteId, UUID disciplinaId);
+    List<AvaliacaoEntity> findByEstudanteId(UUID estudanteId);
 }

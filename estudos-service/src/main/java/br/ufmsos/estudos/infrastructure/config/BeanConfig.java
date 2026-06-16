@@ -47,4 +47,12 @@ public class BeanConfig {
     public ListarAvaliacoesUseCase listarAvaliacoesUseCase(final AvaliacaoRepository repository) {
         return new ListarAvaliacoesUseCase(repository);
     }
+
+    @Bean
+    public ConsultarGradeCurricularUseCase consultarGradeCurricularUseCase(
+            final EstudanteRepository estudanteRepository,
+            final DisciplinaRepository disciplinaRepository,
+            final AvaliacaoRepository avaliacaoRepository) {
+        return new ConsultarGradeCurricularUseCase(estudanteRepository, disciplinaRepository, avaliacaoRepository);
+    }
 }

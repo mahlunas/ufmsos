@@ -18,20 +18,20 @@ public class JpaDisciplinaRepositoryAdapter implements DisciplinaRepository {
 
     @Override
     public Disciplina salvar(Disciplina d) {
-        var entity = new DisciplinaEntity(d.id(), d.nome(), d.codigo(), d.cargaHoraria(), d.cursoId());
+        var entity = new DisciplinaEntity(d.id(), d.nome(), d.codigo(), d.cargaHoraria(), d.cursoId(), d.semestre(), d.preRequisito());
         var saved = repository.save(entity);
-        return new Disciplina(saved.getId(), saved.getNome(), saved.getCodigo(), saved.getCargaHoraria(), saved.getCursoId());
+        return new Disciplina(saved.getId(), saved.getNome(), saved.getCodigo(), saved.getCargaHoraria(), saved.getCursoId(), saved.getSemestre(), saved.getPreRequisito());
     }
 
     @Override
     public Optional<Disciplina> buscarPorId(UUID id) {
-        return repository.findById(id).map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId()));
+        return repository.findById(id).map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId(), e.getSemestre(), e.getPreRequisito()));
     }
 
     @Override
     public List<Disciplina> buscarPorCurso(UUID cursoId) {
         return repository.findByCursoId(cursoId).stream()
-                .map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId()))
+                .map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId(), e.getSemestre(), e.getPreRequisito()))
                 .collect(Collectors.toList());
     }
 
@@ -43,7 +43,7 @@ public class JpaDisciplinaRepositoryAdapter implements DisciplinaRepository {
     @Override
     public List<Disciplina> buscarTodas() {
         return repository.findAll().stream()
-                .map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId()))
+                .map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId(), e.getSemestre(), e.getPreRequisito()))
                 .collect(Collectors.toList());
     }
 }

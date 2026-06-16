@@ -19,12 +19,21 @@ public class DisciplinaEntity {
     private String codigo;
     private Integer cargaHoraria;
     private UUID cursoId;
+    private Integer semestre;
+    @Column(name = "pre_requisito")
+    private String preRequisito;
 
     public DisciplinaEntity(UUID id, String nome, String codigo, Integer cargaHoraria, UUID cursoId) {
+        this(id, nome, codigo, cargaHoraria, cursoId, 1, null);
+    }
+
+    public DisciplinaEntity(UUID id, String nome, String codigo, Integer cargaHoraria, UUID cursoId, Integer semestre, String preRequisito) {
         this.id = id;
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
         this.cursoId = cursoId;
+        this.semestre = semestre;
+        this.preRequisito = preRequisito;
     }
 }

@@ -8,5 +8,6 @@ public interface AvaliacaoRepository {
     Avaliacao salvar(Avaliacao avaliacao);
     java.util.Optional<Avaliacao> buscarPorId(UUID id);
     List<Avaliacao> buscarPorEstudanteEDisciplina(UUID estudanteId, UUID disciplinaId);
+    List<Avaliacao> buscarPorEstudante(UUID estudanteId);
     List<Avaliacao> buscarTodas();
 }
