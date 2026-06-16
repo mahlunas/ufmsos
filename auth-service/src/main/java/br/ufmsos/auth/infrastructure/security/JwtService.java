@@ -16,7 +16,7 @@ import java.util.Map;
 @lombok.extern.slf4j.Slf4j
 public class JwtService {
 
-    @Value("${app.security.jwt.secret:ufmsos-secret-key-must-be-very-long-and-secure-123456-7890}")
+    @Value("${app.security.jwt.secret:5a57afc4b448c0289f736c9dbf82c4963d2274c362bd633813c4d391834e7ead}")
     private String secretKey;
 
     @Value("${app.security.jwt.expiration:86400000}") // 24 hours
@@ -25,6 +25,7 @@ public class JwtService {
     public String gerarToken(Usuario usuario) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("nome", usuario.nome());
+        claims.put("id", usuario.id().toString());
         
         return Jwts.builder()
                 .setClaims(claims)

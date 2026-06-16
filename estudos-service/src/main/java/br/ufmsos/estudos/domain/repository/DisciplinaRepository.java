@@ -10,4 +10,5 @@ public interface DisciplinaRepository {
     Optional<Disciplina> buscarPorId(UUID id);
     List<Disciplina> buscarPorCurso(UUID cursoId);
     boolean existePorCodigo(String codigo);
+    List<Disciplina> buscarTodas();
 }

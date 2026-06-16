@@ -12,4 +12,5 @@ public interface CursoRepository {
     Curso salvar(Curso curso);
     Optional<Curso> buscarPorId(UUID id);
     boolean existePorNome(String nome);
+    java.util.List<Curso> buscarTodos();
 }

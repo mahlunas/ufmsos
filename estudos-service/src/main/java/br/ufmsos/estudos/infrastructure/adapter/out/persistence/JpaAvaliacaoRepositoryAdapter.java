@@ -34,4 +34,11 @@ public class JpaAvaliacaoRepositoryAdapter implements AvaliacaoRepository {
                 .map(e -> new Avaliacao(e.getId(), e.getNome(), e.getDataPrevista(), e.getNotaObtida(), e.getEstudanteId(), e.getDisciplinaId()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Avaliacao> buscarTodas() {
+        return repository.findAll().stream()
+                .map(e -> new Avaliacao(e.getId(), e.getNome(), e.getDataPrevista(), e.getNotaObtida(), e.getEstudanteId(), e.getDisciplinaId()))
+                .collect(Collectors.toList());
+    }
 }

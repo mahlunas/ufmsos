@@ -41,6 +41,7 @@ public class ApiGatewayApplication {
                 .route("ia-service", r -> r.path("/ia/**", "/ia").uri("lb://IA-SERVICE"))
                 .route("financeiro-service", r -> r.path("/financeiro/**", "/financeiro").uri("lb://FINANCEIRO-SERVICE"))
                 .route("saude-service", r -> r.path("/saude/**", "/saude").uri("lb://SAUDE-SERVICE"))
+                .route("rotina-service", r -> r.path("/rotina/**", "/rotina").uri("lb://ROTINA-SERVICE"))
                 .build();
     }
 }

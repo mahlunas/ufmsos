@@ -39,4 +39,11 @@ public class JpaDisciplinaRepositoryAdapter implements DisciplinaRepository {
     public boolean existePorCodigo(String codigo) {
         return repository.existsByCodigo(codigo);
     }
+
+    @Override
+    public List<Disciplina> buscarTodas() {
+        return repository.findAll().stream()
+                .map(e -> new Disciplina(e.getId(), e.getNome(), e.getCodigo(), e.getCargaHoraria(), e.getCursoId()))
+                .collect(Collectors.toList());
+    }
 }

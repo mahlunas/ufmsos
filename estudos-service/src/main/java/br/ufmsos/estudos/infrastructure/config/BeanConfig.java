@@ -32,4 +32,19 @@ public class BeanConfig {
     public AgendarRevisaoUseCase agendarRevisaoUseCase(final RevisaoRepository repository) {
         return new AgendarRevisaoUseCase(repository);
     }
+
+    @Bean
+    public ListarCursosUseCase listarCursosUseCase(final CursoRepository repository) {
+        return new ListarCursosUseCase(repository);
+    }
+
+    @Bean
+    public ListarDisciplinasUseCase listarDisciplinasUseCase(final DisciplinaRepository repository) {
+        return new ListarDisciplinasUseCase(repository);
+    }
+
+    @Bean
+    public ListarAvaliacoesUseCase listarAvaliacoesUseCase(final AvaliacaoRepository repository) {
+        return new ListarAvaliacoesUseCase(repository);
+    }
 }

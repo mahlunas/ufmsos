@@ -16,15 +16,22 @@ import org.springframework.web.bind.annotation.*;
 public class CursoController {
 
     private final CadastrarCursoUseCase cadastrarCursoUseCase;
+    private final br.ufmsos.estudos.application.usecase.ListarCursosUseCase listarCursosUseCase;
 
-    public CursoController(final CadastrarCursoUseCase cadastrarCursoUseCase) {
+    public CursoController(final CadastrarCursoUseCase cadastrarCursoUseCase, final br.ufmsos.estudos.application.usecase.ListarCursosUseCase listarCursosUseCase) {
         this.cadastrarCursoUseCase = cadastrarCursoUseCase;
+        this.listarCursosUseCase = listarCursosUseCase;
     }
 
     @PostMapping
     public ResponseEntity<Curso> cadastrar(@RequestBody @Valid CursoRequest request) {
         final var curso = cadastrarCursoUseCase.executar(request.nome(), request.unidadeAcademica());
         return ResponseEntity.status(HttpStatus.CREATED).body(curso);
+    }
+
+    @GetMapping
+    public ResponseEntity<java.util.List<Curso>> listar() {
+        return ResponseEntity.ok(listarCursosUseCase.executar());
     }
 
     public record CursoRequest(

@@ -35,4 +35,11 @@ public class JpaCursoRepositoryAdapter implements CursoRepository {
     public boolean existePorNome(final String nome) {
         return springDataRepository.existsByNome(nome);
     }
+
+    @Override
+    public java.util.List<Curso> buscarTodos() {
+        return springDataRepository.findAll().stream()
+                .map(entity -> new Curso(entity.getId(), entity.getNome(), entity.getUnidadeAcademica()))
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

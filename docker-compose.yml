@@ -50,7 +50,7 @@ services:
     build: ./auth-service
     container_name: ms-auth
     ports:
-      - "8088:8080"
+      - "8088:8088"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ufmsos-db:5432/ufmsos
       DB_PASSWORD: postgres
