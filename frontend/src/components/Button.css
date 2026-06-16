@@ -3,34 +3,39 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 42px;
+    min-height: 38px;
     border: 0;
-    border-radius: 8px;
-    padding: 0 16px;
+    border-radius: 999px;
+    padding: 0 14px;
     cursor: pointer;
     font: inherit;
+    font-size: 0.86rem;
     font-weight: 800;
     text-decoration: none;
 }
 
 .app-button-primary {
-    background: #176b5d;
+    background: var(--app-blue);
     color: #ffffff;
 }
 
 .app-button-secondary {
-    background: #edf2f7;
-    color: #172033;
+    background: #eef3fb;
+    color: var(--app-ink);
 }
 
 .app-button-danger {
-    background: #fde8e8;
-    color: #a51f24;
+    background: var(--app-red);
+    color: #ffffff;
 }
 
 .app-button-success {
-    background: #e8f5ec;
-    color: #176b35;
+    background: var(--app-green);
+    color: #ffffff;
+}
+
+.app-button:focus-visible {
+    outline: 3px solid rgba(33, 103, 200, 0.22);
 }
 
 .app-button:disabled {

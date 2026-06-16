@@ -282,3 +282,49 @@
         grid-column: 2;
     }
 }
+
+.saude-page {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--app-ink);
+}
+
+.saude-header,
+.saude-message,
+.saude-content {
+    max-width: none;
+}
+
+.saude-header p {
+    color: var(--app-blue);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+}
+
+.saude-header h1 {
+    font-size: 1.55rem;
+}
+
+.saude-daily-panel,
+.saude-stats-panel,
+.saude-calendar-panel,
+.saude-history-panel {
+    border-color: var(--app-line);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.saude-section-title svg {
+    color: var(--app-blue);
+}
+
+.saude-save-button {
+    border-radius: 999px;
+    background: var(--app-blue);
+}
+
+.saude-mood-grid button.is-active {
+    border-color: var(--app-blue);
+    background: var(--app-blue-soft);
+    box-shadow: 0 0 0 3px rgba(33, 103, 200, 0.14);
+}

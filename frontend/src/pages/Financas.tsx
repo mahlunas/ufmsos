@@ -1,7 +1,9 @@
 import {useMemo, useState} from "react";
 import {ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, WalletCards} from "lucide-react";
+import AppPanel from "../components/AppPanel.tsx";
 import Button from "../components/Button.tsx";
 import CategoryPieChart from "../components/CategoryPieChart.tsx";
+import DataList from "../components/DataList.tsx";
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
@@ -152,28 +154,26 @@ export default function Financas(){
 
     return (
         <section className="financas-page">
-            <div className="financas-shell">
-                <PageHeader
-                    eyebrow="Controle financeiro"
-                    title="Finanças"
-                    actions={(
-                        <>
-                            <Button icon={Plus} variant="primary" onClick={() => abrirFormulario("receita")}>Nova receita</Button>
-                            <Button icon={Plus} variant="danger" onClick={() => abrirFormulario("despesa")}>Nova despesa</Button>
-                        </>
-                    )}
-                />
-            </div>
+            <PageHeader
+                eyebrow="Controle financeiro"
+                title="Finanças"
+                actions={(
+                    <>
+                        <Button icon={Plus} variant="primary" onClick={() => abrirFormulario("receita")}>Nova receita</Button>
+                        <Button icon={Plus} variant="danger" onClick={() => abrirFormulario("despesa")}>Nova despesa</Button>
+                    </>
+                )}
+            />
 
             <div className="financas-cards">
-                <MetricCard icon={WalletCards} label="Saldo Atual" value={formatarMoeda(resumo.saldo)}/>
-                <MetricCard icon={ArrowUpCircle} label="Receitas do Mês" value={formatarMoeda(resumo.receitas)}/>
-                <MetricCard icon={ArrowDownCircle} label="Despesas do Mês" value={formatarMoeda(resumo.despesas)}/>
-                <MetricCard icon={Landmark} label="Economia Prevista" value={formatarMoeda(resumo.economia)}/>
+                <MetricCard icon={WalletCards} label="Saldo Atual" value={formatarMoeda(resumo.saldo)} tone={resumo.saldo >= 0 ? "green" : "red"}/>
+                <MetricCard icon={ArrowUpCircle} label="Receitas do Mês" value={formatarMoeda(resumo.receitas)} tone="green"/>
+                <MetricCard icon={ArrowDownCircle} label="Despesas do Mês" value={formatarMoeda(resumo.despesas)} tone="red"/>
+                <MetricCard icon={Landmark} label="Economia Prevista" value={formatarMoeda(resumo.economia)} tone="yellow"/>
             </div>
 
             {formAberto && (
-                <div className="financas-form">
+                <AppPanel className="financas-form app-panel-pad">
                     <label>
                         Descrição
                         <input
@@ -215,11 +215,11 @@ export default function Financas(){
                         <Button variant="primary" onClick={salvarTransacao}>Salvar</Button>
                         <Button onClick={() => setFormAberto(null)}>Cancelar</Button>
                     </div>
-                </div>
+                </AppPanel>
             )}
 
             <div className="financas-content">
-                <section className="financas-chart-panel">
+                <AppPanel className="financas-chart-panel app-panel-pad">
                     <SectionTitle title="Entradas x Saídas" subtitle="Comparativo do mês atual"/>
 
                     <div className="financas-chart">
@@ -245,35 +245,27 @@ export default function Financas(){
                             <strong>{formatarMoeda(resumo.despesas)}</strong>
                         </div>
                     </div>
-                </section>
+                </AppPanel>
 
-                <section className="financas-category-panel">
+                <AppPanel className="financas-category-panel app-panel-pad">
                     <SectionTitle title="Gastos por categoria" subtitle="Distribuição das despesas"/>
                     <CategoryPieChart items={gastosPorCategoria} totalLabel={formatarMoeda(resumo.despesas)}/>
-                </section>
+                </AppPanel>
 
-                <section className="financas-transactions-panel">
+                <AppPanel className="financas-transactions-panel app-panel-pad">
                     <SectionTitle title="Últimas transações" subtitle={`${transacoes.length} lançamentos cadastrados`}/>
 
-                    <div className="financas-transactions">
-                        {transacoes.map((transacao) => (
-                            <article className="financas-transaction" key={transacao.id}>
-                                <div className={`financas-transaction-icon ${transacao.tipo}`}>
-                                    <ReceiptText size={18} aria-hidden="true"/>
-                                </div>
-
-                                <div>
-                                    <h3>{transacao.descricao}</h3>
-                                    <p>{transacao.categoria} · {formatarData(transacao.data)}</p>
-                                </div>
-
-                                <strong className={transacao.tipo}>
-                                    {transacao.tipo === "receita" ? "+" : "-"} {formatarMoeda(transacao.valor)}
-                                </strong>
-                            </article>
-                        ))}
-                    </div>
-                </section>
+                    <DataList
+                        items={transacoes.map((transacao) => ({
+                            id: transacao.id,
+                            title: transacao.descricao,
+                            detail: `${transacao.categoria} · ${formatarData(transacao.data)}`,
+                            meta: `${transacao.tipo === "receita" ? "+" : "-"} ${formatarMoeda(transacao.valor)}`,
+                            icon: ReceiptText,
+                            tone: transacao.tipo === "receita" ? "green" : "red",
+                        }))}
+                    />
+                </AppPanel>
             </div>
         </section>
     )

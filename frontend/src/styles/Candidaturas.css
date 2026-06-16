@@ -291,3 +291,49 @@
         grid-template-columns: repeat(6, 260px);
     }
 }
+
+.candidaturas-page {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--app-ink);
+}
+
+.candidaturas-header,
+.candidaturas-form,
+.candidaturas-board {
+    max-width: none;
+}
+
+.candidaturas-header > div p {
+    color: var(--app-blue);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+}
+
+.candidaturas-header h1 {
+    font-size: 1.55rem;
+}
+
+.candidaturas-primary-button,
+.candidaturas-form-actions button,
+.candidaturas-next-button,
+.candidaturas-decision-actions button {
+    border-radius: 999px;
+}
+
+.candidaturas-primary-button,
+.candidaturas-form-actions button:first-child {
+    background: var(--app-blue);
+}
+
+.candidaturas-form,
+.candidaturas-column {
+    border-color: var(--app-line);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.candidaturas-card-main svg,
+.candidaturas-card-date svg {
+    color: var(--app-blue);
+}

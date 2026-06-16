@@ -5,7 +5,7 @@ import "../styles/MainLayout.css";
 export default function MainLayout(){
     return (
         <div className="app-layout">
-            <aside className="app-sidebar">
+            <aside className="app-sidebar" aria-label="Navegação UFMS.O.S">
                 <Sidebar/>
             </aside>
 

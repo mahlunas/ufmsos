@@ -1,0 +1,41 @@
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 26px;
+    border-radius: 999px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.status-pill.tone-blue {
+    color: var(--app-blue-dark);
+    background: var(--app-blue-soft);
+}
+
+.status-pill.tone-green {
+    color: #0f6e52;
+    background: #e5f6ef;
+}
+
+.status-pill.tone-red {
+    color: #a92828;
+    background: #fff0f0;
+}
+
+.status-pill.tone-yellow {
+    color: #8a5b00;
+    background: #fff3d4;
+}
+
+.status-pill.tone-purple {
+    color: #513fb2;
+    background: #f0edff;
+}
+
+.status-pill.tone-neutral {
+    color: #5b687b;
+    background: #eef2f7;
+}

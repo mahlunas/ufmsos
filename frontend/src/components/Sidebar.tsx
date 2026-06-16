@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {BriefcaseBusiness, GraduationCap, HeartPulse, Home, Landmark, Send, User} from "lucide-react";
+import {NavLink} from "react-router-dom";
+import {BriefcaseBusiness, DatabaseBackup, GraduationCap, HeartPulse, Home, Landmark, Send, User} from "lucide-react";
 import "./Sidebar.css";
 
 const links = [
@@ -16,17 +16,27 @@ export default function Sidebar(){
     return(
         <div className="sidebar">
             <div className="sidebar-brand">
-                <strong>UFMSOS</strong>
+                <span className="sidebar-logo">U</span>
+                <strong>UFMS.O.S</strong>
             </div>
 
             <nav className="sidebar-nav" aria-label="Navegação principal">
                 {links.map(({to, label, icon: Icon}) => (
-                    <Link to={to} key={to} className="sidebar-link">
+                    <NavLink to={to} key={to} className={({isActive}) => `sidebar-link ${isActive ? "is-active" : ""}`}>
                         <Icon size={18} aria-hidden="true"/>
                         <span>{label}</span>
-                    </Link>
+                    </NavLink>
                 ))}
             </nav>
+
+            <div className="sidebar-storage" aria-label="Resumo de armazenamento">
+                <div>
+                    <DatabaseBackup size={17} aria-hidden="true"/>
+                    <strong>Dados locais</strong>
+                </div>
+                <span><i style={{width: "62%"}}/> </span>
+                <p>6 módulos ativos</p>
+            </div>
         </div>
     )
 }

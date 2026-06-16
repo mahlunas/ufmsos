@@ -1,48 +1,5 @@
 .estagio-page {
-    min-height: 100vh;
-    padding: 32px;
-    background: #f6f8fb;
-    color: #172033;
-}
-
-.estagio-header,
-.estagio-cards,
-.estagio-content {
-    max-width: 1180px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.estagio-header {
-    margin-bottom: 20px;
-}
-
-.estagio-header p,
-.estagio-card p,
-.estagio-section-title p,
-.estagio-contract p,
-.estagio-compliance p {
-    margin: 0;
-    color: #66758a;
-}
-
-.estagio-header p {
-    margin-bottom: 6px;
-    color: #58708f;
-    font-size: 0.86rem;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.estagio-header h1,
-.estagio-section-title h2,
-.estagio-contract h3,
-.estagio-compliance h2 {
-    margin: 0;
-}
-
-.estagio-header h1 {
-    font-size: 2rem;
+    color: var(--app-ink);
 }
 
 .estagio-cards {
@@ -52,158 +9,82 @@
     margin-bottom: 18px;
 }
 
-.estagio-card,
-.estagio-contracts-panel,
-.estagio-compliance {
-    border: 1px solid #dfe6ef;
-    border-radius: 8px;
-    background: #ffffff;
-}
-
-.estagio-card {
-    display: grid;
-    gap: 8px;
-    padding: 18px;
-}
-
-.estagio-card svg {
-    color: #176b5d;
-}
-
-.estagio-card strong {
-    font-size: 1.25rem;
-}
-
 .estagio-content {
     display: grid;
-    grid-template-columns: minmax(360px, 1fr) minmax(320px, 420px);
+    grid-template-columns: minmax(0, 1fr) 320px;
     gap: 18px;
-    align-items: start;
-}
-
-.estagio-contracts-panel,
-.estagio-compliance {
-    padding: 18px;
 }
 
 .estagio-section-title {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 16px;
+    gap: 16px;
+    margin-bottom: 8px;
 }
 
 .estagio-filters {
     display: flex;
     gap: 6px;
+    padding: 3px;
+    border-radius: 999px;
+    background: #eef3fb;
 }
 
 .estagio-filters button {
-    min-height: 36px;
+    min-height: 30px;
     border: 0;
-    border-radius: 8px;
-    padding: 0 12px;
-    background: #edf2f7;
-    color: #41516a;
-    cursor: pointer;
-    font: inherit;
+    border-radius: 999px;
+    padding: 0 11px;
+    color: var(--app-muted);
+    background: transparent;
+    font-size: 0.8rem;
     font-weight: 800;
 }
 
 .estagio-filters button.is-active {
-    background: #176b5d;
     color: #ffffff;
-}
-
-.estagio-contracts {
-    display: grid;
-    gap: 10px;
-}
-
-.estagio-contract {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 12px;
-    align-items: center;
-    min-height: 72px;
-    border: 1px solid #e4eaf2;
-    border-radius: 8px;
-    padding: 12px;
-}
-
-.estagio-contract-icon {
-    display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 8px;
-    background: #e6f3ef;
-    color: #176b5d;
-}
-
-.estagio-contract span {
-    display: block;
-    margin-top: 4px;
-    color: #41516a;
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.estagio-contract strong {
-    border-radius: 999px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-}
-
-.estagio-contract strong.active {
-    background: #e8f5ec;
-    color: #176b35;
-}
-
-.estagio-contract strong.finished {
-    background: #edf2f7;
-    color: #41516a;
+    background: var(--app-blue);
 }
 
 .estagio-compliance {
     display: grid;
-    gap: 14px;
-}
-
-.estagio-compliance.regular {
-    border-color: #cfe8d8;
-}
-
-.estagio-compliance.warning {
-    border-color: #f3c4c4;
+    align-content: start;
+    gap: 16px;
 }
 
 .estagio-compliance-icon {
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     border-radius: 8px;
 }
 
 .estagio-compliance.regular .estagio-compliance-icon {
-    background: #e8f5ec;
-    color: #176b35;
+    color: var(--app-green);
+    background: #e6f6f1;
 }
 
 .estagio-compliance.warning .estagio-compliance-icon {
-    background: #fde8e8;
-    color: #a51f24;
+    color: var(--app-red);
+    background: #fff0f0;
+}
+
+.estagio-compliance p,
+.estagio-compliance h2 {
+    margin: 0;
 }
 
 .estagio-compliance p {
+    color: var(--app-muted);
+    font-size: 0.78rem;
     font-weight: 800;
     text-transform: uppercase;
 }
 
 .estagio-compliance h2 {
-    font-size: 1.45rem;
+    font-size: 1.2rem;
 }
 
 .estagio-compliance-details {
@@ -211,39 +92,35 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    min-height: 44px;
-    border: 1px solid #e4eaf2;
-    border-radius: 8px;
-    padding: 0 12px;
+    border-top: 1px solid var(--app-line);
+    padding-top: 14px;
 }
 
 .estagio-compliance-details span {
-    color: #66758a;
+    color: var(--app-muted);
+    font-size: 0.84rem;
 }
 
-@media (max-width: 980px) {
-    .estagio-cards {
+@media (max-width: 1080px) {
+    .estagio-cards,
+    .estagio-content {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .estagio-content {
-        grid-template-columns: 1fr;
+    .estagio-contracts-panel {
+        grid-column: 1 / -1;
     }
 }
 
-@media (max-width: 620px) {
-    .estagio-page {
-        padding: 18px;
-    }
-
+@media (max-width: 720px) {
     .estagio-cards,
-    .estagio-contract,
-    .estagio-section-title {
+    .estagio-content {
         grid-template-columns: 1fr;
     }
 
     .estagio-section-title {
-        display: grid;
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .estagio-filters {

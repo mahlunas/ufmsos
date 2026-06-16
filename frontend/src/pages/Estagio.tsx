@@ -1,5 +1,11 @@
 import {useMemo, useState} from "react";
 import {AlertTriangle, BriefcaseBusiness, CalendarCheck, CheckCircle2, Clock, Coins, FileText} from "lucide-react";
+import AppPanel from "../components/AppPanel.tsx";
+import DataList from "../components/DataList.tsx";
+import MetricCard from "../components/MetricCard.tsx";
+import PageHeader from "../components/PageHeader.tsx";
+import SectionTitle from "../components/SectionTitle.tsx";
+import StatusPill from "../components/StatusPill.tsx";
 import "../styles/Estagio.css";
 
 type StatusContrato = "Ativo" | "Finalizado";
@@ -82,46 +88,19 @@ export default function Estagio(){
 
     return (
         <section className="estagio-page">
-            <header className="estagio-header">
-                <div>
-                    <p>Vida profissional</p>
-                    <h1>Estágio</h1>
-                </div>
-            </header>
+            <PageHeader eyebrow="Vida profissional" title="Estágio"/>
 
             <div className="estagio-cards">
-                <article className="estagio-card">
-                    <BriefcaseBusiness size={22} aria-hidden="true"/>
-                    <p>Empresa Atual</p>
-                    <strong>{contratoAtual.empresa}</strong>
-                </article>
-
-                <article className="estagio-card">
-                    <Clock size={22} aria-hidden="true"/>
-                    <p>Carga Horária</p>
-                    <strong>{contratoAtual.cargaHorariaSemanal}h/semana</strong>
-                </article>
-
-                <article className="estagio-card">
-                    <Coins size={22} aria-hidden="true"/>
-                    <p>Bolsa</p>
-                    <strong>{formatarMoeda(contratoAtual.bolsa)}</strong>
-                </article>
-
-                <article className="estagio-card">
-                    <CalendarCheck size={22} aria-hidden="true"/>
-                    <p>Dias de Recesso</p>
-                    <strong>{contratoAtual.diasRecesso} dias</strong>
-                </article>
+                <MetricCard icon={BriefcaseBusiness} label="Empresa Atual" value={contratoAtual.empresa} tone="blue"/>
+                <MetricCard icon={Clock} label="Carga Horária" value={`${contratoAtual.cargaHorariaSemanal}h/semana`} tone={cargaRegular ? "green" : "red"}/>
+                <MetricCard icon={Coins} label="Bolsa" value={formatarMoeda(contratoAtual.bolsa)} tone="yellow"/>
+                <MetricCard icon={CalendarCheck} label="Recesso" value={`${contratoAtual.diasRecesso} dias`} tone="purple"/>
             </div>
 
             <div className="estagio-content">
-                <section className="estagio-contracts-panel">
+                <AppPanel className="estagio-contracts-panel app-panel-pad">
                     <div className="estagio-section-title">
-                        <div>
-                            <h2>Lista de contratos</h2>
-                            <p>{contratosFiltrados.length} contratos exibidos</p>
-                        </div>
+                        <SectionTitle title="Lista de contratos" subtitle={`${contratosFiltrados.length} contratos exibidos`}/>
 
                         <div className="estagio-filters" aria-label="Filtrar contratos">
                             <button type="button" className={filtro === "Ativo" ? "is-active" : ""} onClick={() => setFiltro("Ativo")}>Ativos</button>
@@ -130,28 +109,19 @@ export default function Estagio(){
                         </div>
                     </div>
 
-                    <div className="estagio-contracts">
-                        {contratosFiltrados.map((contrato) => (
-                            <article className="estagio-contract" key={contrato.id}>
-                                <div className="estagio-contract-icon">
-                                    <FileText size={19} aria-hidden="true"/>
-                                </div>
+                    <DataList
+                        items={contratosFiltrados.map((contrato) => ({
+                            id: contrato.id,
+                            title: contrato.empresa,
+                            detail: `${contrato.cargo} · ${formatarData(contrato.inicio)} até ${formatarData(contrato.fim)}`,
+                            meta: <StatusPill tone={contrato.status === "Ativo" ? "green" : "neutral"}>{contrato.status}</StatusPill>,
+                            icon: FileText,
+                            tone: contrato.status === "Ativo" ? "green" : "neutral",
+                        }))}
+                    />
+                </AppPanel>
 
-                                <div>
-                                    <h3>{contrato.empresa}</h3>
-                                    <p>{contrato.cargo}</p>
-                                    <span>{formatarData(contrato.inicio)} até {formatarData(contrato.fim)}</span>
-                                </div>
-
-                                <strong className={contrato.status === "Ativo" ? "active" : "finished"}>
-                                    {contrato.status}
-                                </strong>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-
-                <aside className={`estagio-compliance ${cargaRegular ? "regular" : "warning"}`}>
+                <AppPanel className={`estagio-compliance app-panel-pad ${cargaRegular ? "regular" : "warning"}`}>
                     <div className="estagio-compliance-icon">
                         {cargaRegular ? <CheckCircle2 size={28} aria-hidden="true"/> : <AlertTriangle size={28} aria-hidden="true"/>}
                     </div>
@@ -168,7 +138,7 @@ export default function Estagio(){
                         <span>Carga atual</span>
                         <strong>{contratoAtual.cargaHorariaSemanal}h/semana</strong>
                     </div>
-                </aside>
+                </AppPanel>
             </div>
         </section>
     )

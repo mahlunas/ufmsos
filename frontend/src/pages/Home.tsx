@@ -1,7 +1,10 @@
-import {AlertTriangle, BriefcaseBusiness, CalendarClock, HeartPulse, Landmark, Send, WalletCards} from "lucide-react";
+import {AlertTriangle, BriefcaseBusiness, CalendarClock, FileText, GraduationCap, HeartPulse, Landmark, Send, WalletCards} from "lucide-react";
+import AppPanel from "../components/AppPanel.tsx";
+import DataList from "../components/DataList.tsx";
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
+import StatusPill from "../components/StatusPill.tsx";
 import "../styles/Home.css";
 
 const proximasEntregas = [
@@ -46,19 +49,53 @@ function formatarData(data: string) {
 export default function Home(){
     return (
         <section className="home-page">
-            <div className="home-shell">
-                <PageHeader eyebrow="Painel inicial" title="Bem-vindo ao UFMSOS"/>
-            </div>
+            <PageHeader eyebrow="Painel inicial" title="My UFMS.O.S"/>
+
+            <AppPanel className="home-quick-access app-panel-pad">
+                <SectionTitle title="Acesso rápido"/>
+
+                <div className="home-quick-grid">
+                    <article className="home-quick-card is-featured">
+                        <div className="home-quick-icon"><GraduationCap size={20} aria-hidden="true"/></div>
+                        <strong>Estudos</strong>
+                        <p>{proximasEntregas.length} entregas próximas</p>
+                        <div className="home-avatar-row">
+                            <span>A</span><span>B</span><span>C</span>
+                        </div>
+                    </article>
+
+                    <article className="home-quick-card">
+                        <div className="home-quick-icon"><WalletCards size={20} aria-hidden="true"/></div>
+                        <strong>Finanças</strong>
+                        <p>{formatarMoeda(-96.35)} de saldo</p>
+                        <StatusPill tone="red">Atenção</StatusPill>
+                    </article>
+
+                    <article className="home-quick-card">
+                        <div className="home-quick-icon"><HeartPulse size={20} aria-hidden="true"/></div>
+                        <strong>Saúde</strong>
+                        <p>3 registros na semana</p>
+                        <StatusPill tone="green">Estável</StatusPill>
+                    </article>
+
+                    <article className="home-quick-card">
+                        <div className="home-quick-icon"><BriefcaseBusiness size={20} aria-hidden="true"/></div>
+                        <strong>Estágio</strong>
+                        <p>30h semanais</p>
+                        <StatusPill tone="blue">Regular</StatusPill>
+                    </article>
+                </div>
+            </AppPanel>
 
             <div className="home-cards">
-                <MetricCard icon={CalendarClock} label="Próxima atividade a vencer" value="Lista 4 - Recursão" detail="Amanhã"/>
-                <MetricCard icon={WalletCards} label="Saldo financeiro atual" value={formatarMoeda(-96.35)} detail="Receitas menos despesas"/>
-                <MetricCard icon={HeartPulse} label="Humor da semana" value="3.4 / 5" detail="Média dos últimos registros"/>
-                <MetricCard icon={BriefcaseBusiness} label="Estágio ativo" value="Tech Campo Grande" detail="30h/semana"/>
-                <MetricCard icon={Send} label="Candidaturas abertas" value="4" detail="Em andamento"/>
+                <MetricCard icon={CalendarClock} label="Próxima atividade" value="Lista 4" detail="Amanhã" tone="blue"/>
+                <MetricCard icon={WalletCards} label="Saldo atual" value={formatarMoeda(-96.35)} detail="Receitas menos despesas" tone="red"/>
+                <MetricCard icon={HeartPulse} label="Humor da semana" value="3.4 / 5" detail="Últimos registros" tone="green"/>
+                <MetricCard icon={BriefcaseBusiness} label="Estágio ativo" value="Tech Campo Grande" detail="30h/semana" tone="purple"/>
+                <MetricCard icon={Send} label="Candidaturas" value="4" detail="Em andamento" tone="yellow"/>
             </div>
 
-            <section className="home-alerts">
+            <AppPanel className="home-alerts app-panel-pad">
                 <SectionTitle icon={AlertTriangle} title="Alertas"/>
 
                 <div className="home-alert-list">
@@ -69,59 +106,53 @@ export default function Home(){
                         </article>
                     ))}
                 </div>
-            </section>
+            </AppPanel>
 
             <div className="home-summary-grid">
-                <section className="home-panel">
+                <AppPanel className="home-panel app-panel-pad">
                     <SectionTitle icon={Landmark} title="Últimas movimentações financeiras"/>
 
-                    <div className="home-list">
-                        {movimentacoesFinanceiras.map((movimentacao) => (
-                            <article key={`${movimentacao.descricao}-${movimentacao.data}`}>
-                                <div>
-                                    <h3>{movimentacao.descricao}</h3>
-                                    <p>{formatarData(movimentacao.data)}</p>
-                                </div>
-                                <strong className={movimentacao.tipo}>
-                                    {movimentacao.tipo === "receita" ? "+" : "-"} {formatarMoeda(movimentacao.valor)}
-                                </strong>
-                            </article>
-                        ))}
-                    </div>
-                </section>
+                    <DataList
+                        items={movimentacoesFinanceiras.map((movimentacao) => ({
+                            id: `${movimentacao.descricao}-${movimentacao.data}`,
+                            title: movimentacao.descricao,
+                            detail: formatarData(movimentacao.data),
+                            meta: `${movimentacao.tipo === "receita" ? "+" : "-"} ${formatarMoeda(movimentacao.valor)}`,
+                            icon: Landmark,
+                            tone: movimentacao.tipo === "receita" ? "green" : "red",
+                        }))}
+                    />
+                </AppPanel>
 
-                <section className="home-panel">
+                <AppPanel className="home-panel app-panel-pad">
                     <SectionTitle icon={CalendarClock} title="Próximas entregas"/>
 
-                    <div className="home-list">
-                        {proximasEntregas.map((entrega) => (
-                            <article key={`${entrega.titulo}-${entrega.data}`}>
-                                <div>
-                                    <h3>{entrega.titulo}</h3>
-                                    <p>{entrega.disciplina}</p>
-                                </div>
-                                <strong>{formatarData(entrega.data)}</strong>
-                            </article>
-                        ))}
-                    </div>
-                </section>
+                    <DataList
+                        items={proximasEntregas.map((entrega) => ({
+                            id: `${entrega.titulo}-${entrega.data}`,
+                            title: entrega.titulo,
+                            detail: entrega.disciplina,
+                            meta: formatarData(entrega.data),
+                            icon: FileText,
+                            tone: "blue",
+                        }))}
+                    />
+                </AppPanel>
 
-                <section className="home-panel">
+                <AppPanel className="home-panel app-panel-pad">
                     <SectionTitle icon={HeartPulse} title="Últimos registros de humor"/>
 
-                    <div className="home-list">
-                        {registrosHumor.map((registro) => (
-                            <article key={`${registro.humor}-${registro.data}`}>
-                                <span className="home-mood">{registro.emoji}</span>
-                                <div>
-                                    <h3>{registro.humor}</h3>
-                                    <p>{registro.observacao}</p>
-                                </div>
-                                <strong>{formatarData(registro.data)}</strong>
-                            </article>
-                        ))}
-                    </div>
-                </section>
+                    <DataList
+                        items={registrosHumor.map((registro) => ({
+                            id: `${registro.humor}-${registro.data}`,
+                            title: `${registro.emoji} ${registro.humor}`,
+                            detail: registro.observacao,
+                            meta: formatarData(registro.data),
+                            icon: HeartPulse,
+                            tone: registro.humor === "Ruim" ? "red" : registro.humor === "Bom" ? "green" : "neutral",
+                        }))}
+                    />
+                </AppPanel>
             </div>
         </section>
     )

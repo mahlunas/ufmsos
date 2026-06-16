@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import type {FormEvent} from "react";
 import {useNavigate} from "react-router-dom";
+import {ArrowRight, LockKeyhole, ShieldCheck} from "lucide-react";
 import Button from "../components/Button.tsx";
+import "../styles/Login.css";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
@@ -68,35 +70,47 @@ export default function Login(){
     }
 
     return(
-        <div class-name="">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="email">E-mail</label>
-                <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    autoComplete="email"
-                />
+        <main className="login-page">
+            <section className="login-card" aria-labelledby="login-title">
+                <div className="login-brand">
+                    <span>U</span>
+                    <strong>UFMS.O.S</strong>
+                </div>
 
-                <label htmlFor="password">Senha</label>
-                <input
-                    id="password"
-                    type="password"
-                    value={senha}
-                    onChange={(event) => setSenha(event.target.value)}
-                    autoComplete="current-password"
-                />
+                <div className="login-copy">
+                    <ShieldCheck size={24} aria-hidden="true"/>
+                    <p>Acesso seguro</p>
+                    <h1 id="login-title">Entrar no painel</h1>
+                </div>
 
-                {erro && <p>{erro}</p>}
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <label htmlFor="email">E-mail</label>
+                    <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        autoComplete="email"
+                        placeholder="teste@ufms.br"
+                    />
 
-                <Button type="submit" variant="primary" disabled={carregando}>
-                    {carregando ? "Entrando..." : "Entrar"}
-                </Button>
-            </form>
-            <p>Não possui uma conta?</p>
-            <Button>Cadastrar-se</Button>
-        </div>
+                    <label htmlFor="password">Senha</label>
+                    <input
+                        id="password"
+                        type="password"
+                        value={senha}
+                        onChange={(event) => setSenha(event.target.value)}
+                        autoComplete="current-password"
+                        placeholder="Sua senha"
+                    />
+
+                    {erro && <p className="login-error">{erro}</p>}
+
+                    <Button icon={carregando ? LockKeyhole : ArrowRight} type="submit" variant="primary" disabled={carregando}>
+                        {carregando ? "Entrando..." : "Entrar"}
+                    </Button>
+                </form>
+            </section>
+        </main>
     )
 }

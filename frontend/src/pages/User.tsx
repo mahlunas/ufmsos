@@ -108,7 +108,7 @@ export default function User(){
                     </div>
                 </section>
 
-                <section className="user-card">
+                <section className="user-card user-notifications-card">
                     <div className="user-section-title">
                         <Bell size={20} aria-hidden="true"/>
                         <h2>Notificações</h2>

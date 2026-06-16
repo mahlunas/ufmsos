@@ -390,3 +390,50 @@
         grid-column: 2;
     }
 }
+
+.estudos-page {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--app-ink);
+}
+
+.estudos-header,
+.estudos-content,
+.estudos-form,
+.estudos-summary {
+    max-width: none;
+}
+
+.estudos-kicker {
+    color: var(--app-blue);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+}
+
+.estudos-header h1 {
+    font-size: 1.55rem;
+}
+
+.estudos-summary div,
+.estudos-form,
+.estudos-disciplina,
+.estudos-details {
+    border-color: var(--app-line);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.estudos-primary-button {
+    border-radius: 999px;
+    background: var(--app-blue);
+}
+
+.estudos-disciplina.is-active {
+    border-color: var(--app-blue);
+    box-shadow: 0 0 0 3px rgba(33, 103, 200, 0.14);
+}
+
+.estudos-disciplina-icon {
+    color: var(--app-blue);
+    background: var(--app-blue-soft);
+}
