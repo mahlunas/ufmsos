@@ -1,6 +1,7 @@
 package br.ufmsos.saude.infrastructure.config;
 
 import br.ufmsos.saude.application.usecase.AnalisarRiscoSaudeUseCase;
+import br.ufmsos.saude.application.usecase.ConsultarRegistrosUseCase;
 import br.ufmsos.saude.application.usecase.RegistrarBemEstarUseCase;
 import br.ufmsos.saude.domain.repository.RegistroBemEstarRepository;
 import org.springframework.context.annotation.Bean;
@@ -17,5 +18,10 @@ public class BeanConfig {
     @Bean
     public AnalisarRiscoSaudeUseCase analisarRiscoSaudeUseCase(RegistroBemEstarRepository repository) {
         return new AnalisarRiscoSaudeUseCase(repository);
+    }
+
+    @Bean
+    public ConsultarRegistrosUseCase consultarRegistrosUseCase(RegistroBemEstarRepository repository) {
+        return new ConsultarRegistrosUseCase(repository);
     }
 }
