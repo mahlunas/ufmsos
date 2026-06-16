@@ -10,4 +10,5 @@ public interface AvaliacaoRepository {
     List<Avaliacao> buscarPorEstudanteEDisciplina(UUID estudanteId, UUID disciplinaId);
     List<Avaliacao> buscarPorEstudante(UUID estudanteId);
     List<Avaliacao> buscarTodas();
+    void deletarPorEstudanteEDisciplina(UUID estudanteId, UUID disciplinaId);
 }

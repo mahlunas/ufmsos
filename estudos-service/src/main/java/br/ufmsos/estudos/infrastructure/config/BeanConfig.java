@@ -55,4 +55,14 @@ public class BeanConfig {
             final AvaliacaoRepository avaliacaoRepository) {
         return new ConsultarGradeCurricularUseCase(estudanteRepository, disciplinaRepository, avaliacaoRepository);
     }
+
+    @Bean
+    public AtualizarEstudanteUseCase atualizarEstudanteUseCase(final EstudanteRepository repository) {
+        return new AtualizarEstudanteUseCase(repository);
+    }
+
+    @Bean
+    public ToggleConclusaoDisciplinaUseCase toggleConclusaoDisciplinaUseCase(final AvaliacaoRepository repository) {
+        return new ToggleConclusaoDisciplinaUseCase(repository);
+    }
 }

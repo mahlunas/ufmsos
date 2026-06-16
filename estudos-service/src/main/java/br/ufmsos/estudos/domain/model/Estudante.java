@@ -8,5 +8,8 @@ public record Estudante(
     String matricula,
     String email,
     UUID cursoId,
-    Integer semestreAtual
+    Integer semestreAtual,
+    Integer anoIngresso,
+    Integer semestreIngresso,
+    String formaCalculoSemestre
 ) {}

@@ -31,6 +31,18 @@ public class ConsultarGradeCurricularUseCase {
 
         UUID cursoId = estudante.cursoId();
         Integer semestreAtual = estudante.semestreAtual() != null ? estudante.semestreAtual() : 1;
+        
+        if ("CALCULADO".equals(estudante.formaCalculoSemestre())) {
+            int entryYear = estudante.anoIngresso() != null ? estudante.anoIngresso() : 2026;
+            int entrySemester = estudante.semestreIngresso() != null ? estudante.semestreIngresso() : 1;
+            
+            java.time.LocalDate now = java.time.LocalDate.now();
+            int currentYear = now.getYear();
+            int currentSemesterPeriod = now.getMonthValue() <= 6 ? 1 : 2;
+            
+            int calculated = (currentYear - entryYear) * 2 + (currentSemesterPeriod - entrySemester) + 1;
+            semestreAtual = Math.min(8, Math.max(1, calculated));
+        }
 
         // 2. Fetch all disciplines of the course
         List<Disciplina> disciplinas = disciplinaRepository.buscarPorCurso(cursoId);

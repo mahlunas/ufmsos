@@ -33,7 +33,20 @@ public class EstudanteEntity {
     @Column(name = "semestre_atual")
     private Integer semestreAtual;
 
+    @Column(name = "ano_ingresso")
+    private Integer anoIngresso;
+
+    @Column(name = "semestre_ingresso")
+    private Integer semestreIngresso;
+
+    @Column(name = "forma_calculo_semestre")
+    private String formaCalculoSemestre;
+
     public EstudanteEntity(UUID id, String nomeCompleto, String matricula, String email, UUID cursoId, String senhaHash, Integer semestreAtual) {
+        this(id, nomeCompleto, matricula, email, cursoId, senhaHash, semestreAtual, 2026, 1, "MANUAL");
+    }
+
+    public EstudanteEntity(UUID id, String nomeCompleto, String matricula, String email, UUID cursoId, String senhaHash, Integer semestreAtual, Integer anoIngresso, Integer semestreIngresso, String formaCalculoSemestre) {
         this.id = id;
         this.nomeCompleto = nomeCompleto;
         this.matricula = matricula;
@@ -41,5 +54,8 @@ public class EstudanteEntity {
         this.cursoId = cursoId;
         this.senhaHash = senhaHash;
         this.semestreAtual = semestreAtual;
+        this.anoIngresso = anoIngresso;
+        this.semestreIngresso = semestreIngresso;
+        this.formaCalculoSemestre = formaCalculoSemestre;
     }
 }

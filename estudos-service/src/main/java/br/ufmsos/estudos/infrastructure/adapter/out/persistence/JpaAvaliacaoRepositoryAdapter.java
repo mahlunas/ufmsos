@@ -48,4 +48,10 @@ public class JpaAvaliacaoRepositoryAdapter implements AvaliacaoRepository {
                 .map(e -> new Avaliacao(e.getId(), e.getNome(), e.getDataPrevista(), e.getNotaObtida(), e.getEstudanteId(), e.getDisciplinaId()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deletarPorEstudanteEDisciplina(UUID estudanteId, UUID disciplinaId) {
+        var entities = repository.findByEstudanteIdAndDisciplinaId(estudanteId, disciplinaId);
+        repository.deleteAll(entities);
+    }
 }
