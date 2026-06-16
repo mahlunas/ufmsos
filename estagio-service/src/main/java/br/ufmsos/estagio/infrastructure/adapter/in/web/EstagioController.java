@@ -1,5 +1,6 @@
 package br.ufmsos.estagio.infrastructure.adapter.in.web;
 
+import br.ufmsos.estagio.application.usecase.ListarContratosUseCase;
 import br.ufmsos.estagio.application.usecase.ProjetarRecessoUseCase;
 import br.ufmsos.estagio.application.usecase.RegistrarContratoEstagioUseCase;
 import br.ufmsos.estagio.application.usecase.VerificarProtecaoAvaliacaoUseCase;
@@ -20,22 +21,35 @@ public class EstagioController {
     private final RegistrarContratoEstagioUseCase registrarUseCase;
     private final ProjetarRecessoUseCase recessoUseCase;
     private final VerificarProtecaoAvaliacaoUseCase protecaoUseCase;
+    private final ListarContratosUseCase listarContratosUseCase;
     private final ContratoEstagioRepository repository;
 
     public EstagioController(
             RegistrarContratoEstagioUseCase registrarUseCase,
             ProjetarRecessoUseCase recessoUseCase,
             VerificarProtecaoAvaliacaoUseCase protecaoUseCase,
+            ListarContratosUseCase listarContratosUseCase,
             ContratoEstagioRepository repository) {
         this.registrarUseCase = registrarUseCase;
         this.recessoUseCase = recessoUseCase;
         this.protecaoUseCase = protecaoUseCase;
+        this.listarContratosUseCase = listarContratosUseCase;
         this.repository = repository;
     }
 
     @PostMapping("/contratos")
     public ResponseEntity<ContratoEstagio> registrar(@RequestBody @Valid ContratoEstagio contrato) {
         return ResponseEntity.status(HttpStatus.CREATED).body(registrarUseCase.executar(contrato));
+    }
+
+    @GetMapping("/contratos")
+    public ResponseEntity<java.util.List<ContratoEstagio>> listarPorEstudante(@RequestParam String estudanteId) {
+        try {
+            UUID id = UUID.fromString(estudanteId);
+            return ResponseEntity.ok(listarContratosUseCase.executar(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/contratos/{id}/recesso")
