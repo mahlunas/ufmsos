@@ -38,3 +38,24 @@ export function getCurrentUsuarioId() {
 export function getCurrentUsuarioEmail() {
     return getTokenPayload()?.sub ?? null;
 }
+
+export function getCurrentUsuarioNome() {
+    return getTokenPayload()?.nome ?? null;
+}
+
+export function normalizarTextoExibicao(valor: string | null | undefined) {
+    if (!valor) {
+        return null;
+    }
+
+    if (!/[ÃÂ]/.test(valor)) {
+        return valor.normalize("NFC");
+    }
+
+    try {
+        const bytes = Uint8Array.from(Array.from(valor).map((caractere) => caractere.charCodeAt(0)));
+        return new TextDecoder("utf-8").decode(bytes).normalize("NFC");
+    } catch {
+        return valor.normalize("NFC");
+    }
+}

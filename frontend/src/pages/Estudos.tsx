@@ -26,15 +26,6 @@ type AvaliacaoApi = {
     disciplinaId?: string | null;
 };
 
-type EstudanteApi = {
-    id: string;
-    nomeCompleto: string;
-    matricula: string;
-    email: string;
-    cursoId?: string | null;
-    semestreAtual?: number | null;
-};
-
 type DisciplinaForm = {
     nome: string;
     codigo: string;
@@ -59,7 +50,6 @@ export default function Estudos(){
     const estudanteId = getCurrentUsuarioId();
     const [disciplinas, setDisciplinas] = useState<DisciplinaApi[]>([]);
     const [avaliacoes, setAvaliacoes] = useState<AvaliacaoApi[]>([]);
-    const [estudante, setEstudante] = useState<EstudanteApi | null>(null);
     const [formAberto, setFormAberto] = useState(false);
     const [form, setForm] = useState<DisciplinaForm>(formVazio);
     const [erro, setErro] = useState("");
@@ -82,15 +72,6 @@ export default function Estudos(){
 
                 setDisciplinas(await disciplinasResponse.json() as DisciplinaApi[]);
                 setAvaliacoes(await avaliacoesResponse.json() as AvaliacaoApi[]);
-
-                if (estudanteId) {
-                    const estudanteResponse = await apiRequest(`/estudantes/${estudanteId}`);
-                    if (estudanteResponse.ok) {
-                        setEstudante(await estudanteResponse.json() as EstudanteApi);
-                    } else {
-                        setEstudante(null);
-                    }
-                }
             } catch {
                 setErro("Não foi possível carregar os dados de estudos.");
             } finally {
@@ -118,7 +99,7 @@ export default function Estudos(){
                     nome: form.nome,
                     codigo: form.codigo || null,
                     cargaHoraria: Number(form.cargaHoraria),
-                    cursoId: estudante?.cursoId ?? null,
+                    cursoId: null,
                 },
             });
 
@@ -145,7 +126,7 @@ export default function Estudos(){
                 <MetricCard icon={BookOpen} label="Disciplinas" value={disciplinas.length} tone="blue"/>
                 <MetricCard icon={CalendarDays} label="Avaliações" value={avaliacoes.length} tone="green"/>
                 <MetricCard icon={FilePenLine} label="Pendentes" value={avaliacoesPendentes.length} tone="red"/>
-                <MetricCard icon={BookOpen} label="Semestre" value={estudante?.semestreAtual ?? "--"} tone="purple"/>
+                <MetricCard icon={BookOpen} label="Semestre" value="--" tone="purple"/>
             </div>
 
             <div className="estudos-toolbar">
