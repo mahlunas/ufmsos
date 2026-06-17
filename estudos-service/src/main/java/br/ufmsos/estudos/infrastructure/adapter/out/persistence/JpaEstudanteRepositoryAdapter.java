@@ -20,7 +20,6 @@ public class JpaEstudanteRepositoryAdapter implements EstudanteRepository {
             e.getId(),
             e.getNomeCompleto(),
             e.getMatricula(),
-            e.getEmail(),
             e.getCursoId(),
             e.getSemestreAtual(),
             e.getAnoIngresso(),
@@ -37,20 +36,16 @@ public class JpaEstudanteRepositoryAdapter implements EstudanteRepository {
                 newEntity.setId(estudante.id());
                 return newEntity;
             });
-        
+
         entity.setNomeCompleto(estudante.nomeCompleto());
         entity.setMatricula(estudante.matricula());
-        entity.setEmail(estudante.email());
         entity.setCursoId(estudante.cursoId());
         entity.setSemestreAtual(estudante.semestreAtual());
         entity.setAnoIngresso(estudante.anoIngresso());
         entity.setSemestreIngresso(estudante.semestreIngresso());
         entity.setFormaCalculoSemestre(estudante.formaCalculoSemestre());
-        
-        if (entity.getSenhaHash() == null) {
-            entity.setSenhaHash("");
-        }
-        
+
         repository.save(entity);
     }
 }
+

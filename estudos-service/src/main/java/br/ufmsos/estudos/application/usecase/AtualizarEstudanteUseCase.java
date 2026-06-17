@@ -14,7 +14,6 @@ public class AtualizarEstudanteUseCase {
     public Estudante executar(
             UUID id,
             String nomeCompleto,
-            String email,
             UUID cursoId,
             Integer semestreAtual,
             Integer anoIngresso,
@@ -29,7 +28,6 @@ public class AtualizarEstudanteUseCase {
                 id,
                 nomeCompleto != null ? nomeCompleto : estudante.nomeCompleto(),
                 estudante.matricula(),
-                email != null ? email : estudante.email(),
                 cursoId != null ? cursoId : estudante.cursoId(),
                 semestreAtual != null ? semestreAtual : estudante.semestreAtual(),
                 anoIngresso != null ? anoIngresso : estudante.anoIngresso(),

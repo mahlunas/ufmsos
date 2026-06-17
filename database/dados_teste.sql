@@ -1,6 +1,15 @@
 -- Massa de teste para o UFMS.O.S.
 -- Idempotente: pode ser executada mais de uma vez sem duplicar os registros.
 
+INSERT INTO usuario (id, nome, email, senha_hash)
+VALUES (
+    '20f67c59-3c92-4b5d-a318-75551b39a50b',
+    'João da Silva',
+    'joao@ufms.br',
+    '$2a$10$cYzlyEwp0LIgVapHspYURep4Hx0nWDSGyiYqpbRU5bxF.GojkbMdm'
+)
+ON CONFLICT DO NOTHING;
+
 INSERT INTO curso (id, nome, unidade_academica)
 VALUES (
     '0d5d9baf-4d10-4f6f-8b75-6a0dfc2b1001',
@@ -13,9 +22,7 @@ INSERT INTO estudante (
     id,
     nome_completo,
     matricula,
-    email,
     curso_id,
-    senha_hash,
     ano_ingresso,
     forma_calculo_semestre,
     semestre_atual,
@@ -25,9 +32,7 @@ VALUES (
     '20f67c59-3c92-4b5d-a318-75551b39a50b',
     'João',
     '2024001234',
-    'joao@ufms.br',
     '0d5d9baf-4d10-4f6f-8b75-6a0dfc2b1001',
-    '$2a$10$cYzlyEwp0LIgVapHspYURep4Hx0nWDSGyiYqpbRU5bxF.GojkbMdm',
     2024,
     'MATRICULA',
     4,

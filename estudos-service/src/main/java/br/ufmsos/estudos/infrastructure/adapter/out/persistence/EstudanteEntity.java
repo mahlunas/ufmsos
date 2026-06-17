@@ -21,14 +21,8 @@ public class EstudanteEntity {
     @Column(nullable = false, unique = true)
     private String matricula;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(name = "curso_id")
     private UUID cursoId;
-
-    @Column(name = "senha_hash", nullable = false)
-    private String senhaHash;
 
     @Column(name = "semestre_atual")
     private Integer semestreAtual;
@@ -42,17 +36,15 @@ public class EstudanteEntity {
     @Column(name = "forma_calculo_semestre")
     private String formaCalculoSemestre;
 
-    public EstudanteEntity(UUID id, String nomeCompleto, String matricula, String email, UUID cursoId, String senhaHash, Integer semestreAtual) {
-        this(id, nomeCompleto, matricula, email, cursoId, senhaHash, semestreAtual, 2026, 1, "MANUAL");
+    public EstudanteEntity(UUID id, String nomeCompleto, String matricula, UUID cursoId, Integer semestreAtual) {
+        this(id, nomeCompleto, matricula, cursoId, semestreAtual, 2026, 1, "MANUAL");
     }
 
-    public EstudanteEntity(UUID id, String nomeCompleto, String matricula, String email, UUID cursoId, String senhaHash, Integer semestreAtual, Integer anoIngresso, Integer semestreIngresso, String formaCalculoSemestre) {
+    public EstudanteEntity(UUID id, String nomeCompleto, String matricula, UUID cursoId, Integer semestreAtual, Integer anoIngresso, Integer semestreIngresso, String formaCalculoSemestre) {
         this.id = id;
         this.nomeCompleto = nomeCompleto;
         this.matricula = matricula;
-        this.email = email;
         this.cursoId = cursoId;
-        this.senhaHash = senhaHash;
         this.semestreAtual = semestreAtual;
         this.anoIngresso = anoIngresso;
         this.semestreIngresso = semestreIngresso;
