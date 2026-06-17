@@ -16,7 +16,7 @@ export default function Sidebar(){
     return(
         <div className="sidebar">
             <div className="sidebar-brand">
-                <span className="sidebar-logo">U</span>
+                <img className="sidebar-logo" src="/favicon.ico" alt="" aria-hidden="true" />
                 <strong>UFMS.O.S</strong>
             </div>
 

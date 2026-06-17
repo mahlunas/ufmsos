@@ -22,15 +22,12 @@
     gap: 10px;
 }
 
-.login-brand span {
-    display: grid;
-    place-items: center;
+.login-brand-logo {
     width: 34px;
     height: 34px;
-    border-radius: 8px;
-    color: #ffffff;
-    background: var(--app-blue);
-    font-weight: 900;
+    flex: 0 0 auto;
+    object-fit: contain;
+    display: block;
 }
 
 .login-brand strong {
