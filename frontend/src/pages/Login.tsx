@@ -3,9 +3,8 @@ import type {FormEvent} from "react";
 import {useNavigate} from "react-router-dom";
 import {ArrowRight, LockKeyhole, ShieldCheck} from "lucide-react";
 import Button from "../components/Button.tsx";
+import {apiRequest} from "../lib/api.ts";
 import "../styles/Login.css";
-
-const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function Login(){
     const navigate = useNavigate();
@@ -32,15 +31,12 @@ export default function Login(){
         setCarregando(true);
 
         try {
-            const response = await fetch(`${API_URL}/auth/login`, {
+            const response = await apiRequest("/auth/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+                json: {
                     email,
                     senha,
-                }),
+                },
             });
 
             if (response.status === 401) {

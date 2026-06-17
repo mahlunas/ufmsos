@@ -1,74 +1,28 @@
-import {useMemo, useState} from "react";
-import {ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, WalletCards} from "lucide-react";
+import {useEffect, useMemo, useState} from "react";
+import {ArrowDownCircle, ArrowUpCircle, Landmark, WalletCards} from "lucide-react";
 import {Chart} from "@highcharts/react";
 import {ColumnSeries} from "@highcharts/react/series/Column";
 import AppPanel from "../components/AppPanel.tsx";
-import Button from "../components/Button.tsx";
 import CategoryPieChart from "../components/CategoryPieChart.tsx";
-import DataList from "../components/DataList.tsx";
 import MetricCard from "../components/MetricCard.tsx";
 import PageHeader from "../components/PageHeader.tsx";
 import SectionTitle from "../components/SectionTitle.tsx";
+import {apiRequest} from "../lib/api.ts";
+import {getCurrentUsuarioId} from "../lib/auth.ts";
 import "../styles/Financas.css";
 
-type TipoTransacao = "receita" | "despesa";
-
-type Transacao = {
-    id: number;
-    descricao: string;
-    categoria: string;
-    data: string;
-    valor: number;
-    tipo: TipoTransacao;
+type ResumoFinanceiroApi = {
+    estudanteId: string;
+    saldoTotal: number;
+    totalReceitas: number;
+    totalDespesas: number;
+    gastosPorCategoria: Record<string, number>;
 };
 
-type TransacaoForm = {
-    descricao: string;
-    categoria: string;
-    data: string;
-    valor: string;
-};
-
-const transacoesIniciais: Transacao[] = [
-    {
-        id: 1,
-        descricao: "Bolsa Permanência",
-        categoria: "Auxílio estudantil",
-        data: "2026-06-05",
-        valor: 700,
-        tipo: "receita",
-    },
-    {
-        id: 2,
-        descricao: "Aluguel",
-        categoria: "Moradia",
-        data: "2026-06-07",
-        valor: 520,
-        tipo: "despesa",
-    },
-    {
-        id: 3,
-        descricao: "Mercado",
-        categoria: "Alimentação",
-        data: "2026-06-10",
-        valor: 186.45,
-        tipo: "despesa",
-    },
-    {
-        id: 4,
-        descricao: "Internet",
-        categoria: "Serviços",
-        data: "2026-06-12",
-        valor: 89.9,
-        tipo: "despesa",
-    },
-];
-
-const formVazio: TransacaoForm = {
-    descricao: "",
-    categoria: "",
-    data: "",
-    valor: "",
+type CategoriaFinanceiraApi = {
+    id: string;
+    nome: string;
+    corIcone?: string | null;
 };
 
 const coresCategorias = ["#176b5d", "#2456a6", "#8a5b00", "#6042a6", "#a51f24", "#41516a"];
@@ -80,147 +34,79 @@ function formatarMoeda(valor: number) {
     }).format(valor);
 }
 
-function formatarData(data: string) {
-    return new Intl.DateTimeFormat("pt-BR", {
-        day: "2-digit",
-        month: "short",
-    }).format(new Date(`${data}T12:00:00`));
-}
-
 export default function Financas(){
-    const [transacoes, setTransacoes] = useState(transacoesIniciais);
-    const [formAberto, setFormAberto] = useState<TipoTransacao | null>(null);
-    const [form, setForm] = useState<TransacaoForm>(formVazio);
+    const estudanteId = getCurrentUsuarioId();
+    const [resumo, setResumo] = useState<ResumoFinanceiroApi | null>(null);
+    const [categorias, setCategorias] = useState<CategoriaFinanceiraApi[]>([]);
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
 
-    const resumo = useMemo(() => {
-        const receitas = transacoes
-            .filter((transacao) => transacao.tipo === "receita")
-            .reduce((total, transacao) => total + transacao.valor, 0);
+    useEffect(() => {
+        async function carregar() {
+            if (!estudanteId) {
+                setErro("Usuário autenticado sem identificador de estudante.");
+                setCarregando(false);
+                return;
+            }
 
-        const despesas = transacoes
-            .filter((transacao) => transacao.tipo === "despesa")
-            .reduce((total, transacao) => total + transacao.valor, 0);
+            setCarregando(true);
+            setErro("");
 
-        return {
-            receitas,
-            despesas,
-            saldo: receitas - despesas,
-            economia: receitas * 0.2 - despesas * 0.05,
-        };
-    }, [transacoes]);
+            try {
+                const [resumoResponse, categoriasResponse] = await Promise.all([
+                    apiRequest(`/financeiro/resumo/${estudanteId}`),
+                    apiRequest("/financeiro/categorias"),
+                ]);
 
-    const gastosPorCategoria = useMemo(() => {
-        const categorias = transacoes
-            .filter((transacao) => transacao.tipo === "despesa")
-            .reduce<Record<string, number>>((acc, transacao) => {
-                acc[transacao.categoria] = (acc[transacao.categoria] ?? 0) + transacao.valor;
-                return acc;
-            }, {});
+                if (!resumoResponse.ok || !categoriasResponse.ok) {
+                    throw new Error("Falha ao carregar finanças.");
+                }
 
-        return Object.entries(categorias)
-            .map(([label, value], index) => ({
-                label,
-                value,
-                color: coresCategorias[index % coresCategorias.length],
-            }))
-            .sort((a, b) => b.value - a.value);
-    }, [transacoes]);
-
-    function abrirFormulario(tipo: TipoTransacao) {
-        setForm(formVazio);
-        setFormAberto(tipo);
-    }
-
-    function salvarTransacao() {
-        const valor = Number(form.valor.replace(",", "."));
-
-        if (!formAberto || !form.descricao.trim() || !form.categoria.trim() || !form.data || !valor) {
-            return;
+                setResumo(await resumoResponse.json() as ResumoFinanceiroApi);
+                setCategorias(await categoriasResponse.json() as CategoriaFinanceiraApi[]);
+            } catch {
+                setErro("Não foi possível carregar os dados financeiros.");
+            } finally {
+                setCarregando(false);
+            }
         }
 
-        const novaTransacao: Transacao = {
-            id: Date.now(),
-            descricao: form.descricao,
-            categoria: form.categoria,
-            data: form.data,
-            valor,
-            tipo: formAberto,
-        };
+        carregar();
+    }, [estudanteId]);
 
-        setTransacoes((atuais) => [novaTransacao, ...atuais]);
-        setForm(formVazio);
-        setFormAberto(null);
-    }
+    const gastosPorCategoria = useMemo(() => {
+        if (!resumo) {
+            return [];
+        }
+
+        return Object.entries(resumo.gastosPorCategoria)
+            .map(([label, value], index) => ({
+                label,
+                value: Number(value),
+                color: categorias.find((categoria) => categoria.nome === label)?.corIcone ?? coresCategorias[index % coresCategorias.length],
+            }))
+            .sort((a, b) => b.value - a.value);
+    }, [categorias, resumo]);
 
     return (
         <section className="financas-page">
             <PageHeader
                 eyebrow="Controle financeiro"
                 title="Finanças"
-                actions={(
-                    <>
-                        <Button icon={Plus} variant="primary" onClick={() => abrirFormulario("receita")}>Nova receita</Button>
-                        <Button icon={Plus} variant="danger" onClick={() => abrirFormulario("despesa")}>Nova despesa</Button>
-                    </>
-                )}
             />
 
+            {erro && <p className="saude-message">{erro}</p>}
+
             <div className="financas-cards">
-                <MetricCard icon={WalletCards} label="Saldo Atual" value={formatarMoeda(resumo.saldo)} tone={resumo.saldo >= 0 ? "green" : "red"}/>
-                <MetricCard icon={ArrowUpCircle} label="Receitas do Mês" value={formatarMoeda(resumo.receitas)} tone="green"/>
-                <MetricCard icon={ArrowDownCircle} label="Despesas do Mês" value={formatarMoeda(resumo.despesas)} tone="red"/>
-                <MetricCard icon={Landmark} label="Economia Prevista" value={formatarMoeda(resumo.economia)} tone="yellow"/>
+                <MetricCard icon={WalletCards} label="Saldo Atual" value={formatarMoeda(resumo?.saldoTotal ?? 0)} tone={(resumo?.saldoTotal ?? 0) >= 0 ? "green" : "red"}/>
+                <MetricCard icon={ArrowUpCircle} label="Receitas do Mês" value={formatarMoeda(resumo?.totalReceitas ?? 0)} tone="green"/>
+                <MetricCard icon={ArrowDownCircle} label="Despesas do Mês" value={formatarMoeda(resumo?.totalDespesas ?? 0)} tone="red"/>
+                <MetricCard icon={Landmark} label="Categorias" value={gastosPorCategoria.length} tone="yellow"/>
             </div>
-
-            {formAberto && (
-                <AppPanel className="financas-form app-panel-pad">
-                    <label>
-                        Descrição
-                        <input
-                            value={form.descricao}
-                            onChange={(event) => setForm((atual) => ({...atual, descricao: event.target.value}))}
-                            placeholder={formAberto === "receita" ? "Ex.: Bolsa Permanência" : "Ex.: Mercado"}
-                        />
-                    </label>
-
-                    <label>
-                        Categoria
-                        <input
-                            value={form.categoria}
-                            onChange={(event) => setForm((atual) => ({...atual, categoria: event.target.value}))}
-                            placeholder={formAberto === "receita" ? "Ex.: Auxílio" : "Ex.: Alimentação"}
-                        />
-                    </label>
-
-                    <label>
-                        Data
-                        <input
-                            type="date"
-                            value={form.data}
-                            onChange={(event) => setForm((atual) => ({...atual, data: event.target.value}))}
-                        />
-                    </label>
-
-                    <label>
-                        Valor
-                        <input
-                            inputMode="decimal"
-                            value={form.valor}
-                            onChange={(event) => setForm((atual) => ({...atual, valor: event.target.value}))}
-                            placeholder="0,00"
-                        />
-                    </label>
-
-                    <div className="financas-form-actions">
-                        <Button variant="primary" onClick={salvarTransacao}>Salvar</Button>
-                        <Button onClick={() => setFormAberto(null)}>Cancelar</Button>
-                    </div>
-                </AppPanel>
-            )}
 
             <div className="financas-content">
                 <AppPanel className="financas-chart-panel app-panel-pad">
-                    <SectionTitle title="Entradas x Saídas" subtitle="Comparativo do mês atual"/>
+                    <SectionTitle title="Entradas x Saídas" subtitle="Resumo real do banco"/>
 
                     <div className="financas-chart-shell">
                         <Chart
@@ -273,51 +159,30 @@ export default function Financas(){
                                 },
                             }}
                         >
-                            <ColumnSeries
-                                name="Fluxo financeiro"
-                                data={[
-                                    {y: resumo.receitas, color: "#176b5d"},
-                                    {y: resumo.despesas, color: "#a51f24"},
-                                ]}
-                            />
+                            <ColumnSeries data={[{y: resumo?.totalReceitas ?? 0, color: "#176b5d"}, {y: resumo?.totalDespesas ?? 0, color: "#a51f24"}]}/>
                         </Chart>
 
                         <div className="financas-chart-summary" aria-label="Resumo do gráfico">
                             <div className="financas-chart-summary-row">
                                 <span className="financas-chart-key income"/>
                                 <span>Entradas</span>
-                                <strong>{formatarMoeda(resumo.receitas)}</strong>
+                                <strong>{formatarMoeda(resumo?.totalReceitas ?? 0)}</strong>
                             </div>
 
                             <div className="financas-chart-summary-row">
                                 <span className="financas-chart-key expense"/>
                                 <span>Saídas</span>
-                                <strong>{formatarMoeda(resumo.despesas)}</strong>
+                                <strong>{formatarMoeda(resumo?.totalDespesas ?? 0)}</strong>
                             </div>
                         </div>
                     </div>
                 </AppPanel>
 
                 <AppPanel className="financas-category-panel app-panel-pad">
-                    <SectionTitle title="Gastos por categoria" subtitle="Distribuição das despesas"/>
-                    <CategoryPieChart items={gastosPorCategoria} totalLabel={formatarMoeda(resumo.despesas)}/>
-                </AppPanel>
-
-                <AppPanel className="financas-transactions-panel app-panel-pad">
-                    <SectionTitle title="Últimas transações" subtitle={`${transacoes.length} lançamentos cadastrados`}/>
-
-                    <DataList
-                        items={transacoes.map((transacao) => ({
-                            id: transacao.id,
-                            title: transacao.descricao,
-                            detail: `${transacao.categoria} · ${formatarData(transacao.data)}`,
-                            meta: `${transacao.tipo === "receita" ? "+" : "-"} ${formatarMoeda(transacao.valor)}`,
-                            icon: ReceiptText,
-                            tone: transacao.tipo === "receita" ? "green" : "red",
-                        }))}
-                    />
+                    <SectionTitle title="Gastos por categoria" subtitle="Distribuição real das despesas"/>
+                    {carregando ? <p>Carregando categorias...</p> : <CategoryPieChart items={gastosPorCategoria} totalLabel={formatarMoeda(resumo?.totalDespesas ?? 0)}/>}
                 </AppPanel>
             </div>
         </section>
-    )
+    );
 }

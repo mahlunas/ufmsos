@@ -1,6 +1,8 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {BarChart3, CalendarDays, HeartPulse, Save} from "lucide-react";
 import Button from "../components/Button.tsx";
+import {apiRequest} from "../lib/api.ts";
+import {getCurrentUsuarioId} from "../lib/auth.ts";
 import "../styles/Saude.css";
 
 type Humor = {
@@ -10,12 +12,16 @@ type Humor = {
     valor: number;
 };
 
-type RegistroHumor = {
-    id: number;
-    data: string;
-    humorId: number;
-    observacao: string;
+type RegistroHumorApi = {
+    id: string;
+    nivelHumor: number;
+    nivelExaustao: number;
+    observacao?: string | null;
+    dataRegistro: string;
+    estudanteId: string;
 };
+
+type RiscoBurnout = "BAIXO" | "MODERADO" | "ALTO" | "CRITICO";
 
 const humores: Humor[] = [
     {id: 5, emoji: "😄", label: "Ótimo", valor: 5},
@@ -23,18 +29,6 @@ const humores: Humor[] = [
     {id: 3, emoji: "😐", label: "Neutro", valor: 3},
     {id: 2, emoji: "😔", label: "Ruim", valor: 2},
     {id: 1, emoji: "😫", label: "Péssimo", valor: 1},
-];
-
-const registrosIniciais: RegistroHumor[] = [
-    {id: 1, data: "2026-06-15", humorId: 4, observacao: "Dia produtivo, mas com um pouco de cansaço."},
-    {id: 2, data: "2026-06-14", humorId: 2, observacao: "Ansiedade antes da prova."},
-    {id: 3, data: "2026-06-13", humorId: 3, observacao: "Rotina normal."},
-    {id: 4, data: "2026-06-12", humorId: 5, observacao: "Consegui finalizar uma entrega importante."},
-    {id: 5, data: "2026-06-11", humorId: 4, observacao: "Bom descanso depois das aulas."},
-    {id: 6, data: "2026-06-10", humorId: 1, observacao: "Sono ruim e muitas pendências acumuladas."},
-    {id: 7, data: "2026-06-09", humorId: 3, observacao: "Dia estável."},
-    {id: 8, data: "2026-06-05", humorId: 2, observacao: "Semana pesada."},
-    {id: 9, data: "2026-05-29", humorId: 4, observacao: "Boa evolução nos estudos."},
 ];
 
 function hojeIso() {
@@ -46,19 +40,19 @@ function formatarData(data: string) {
         day: "2-digit",
         month: "short",
         year: "numeric",
-    }).format(new Date(`${data}T12:00:00`));
+    }).format(new Date(data));
 }
 
 function buscarHumor(id: number) {
     return humores.find((humor) => humor.id === id) ?? humores[2];
 }
 
-function media(registros: RegistroHumor[]) {
+function media(registros: RegistroHumorApi[]) {
     if (!registros.length) {
         return 0;
     }
 
-    const total = registros.reduce((soma, registro) => soma + buscarHumor(registro.humorId).valor, 0);
+    const total = registros.reduce((soma, registro) => soma + buscarHumor(registro.nivelHumor).valor, 0);
     return total / registros.length;
 }
 
@@ -69,25 +63,68 @@ function inicioPeriodo(dias: number) {
 }
 
 export default function Saude(){
-    const [registros, setRegistros] = useState(registrosIniciais);
+    const estudanteId = getCurrentUsuarioId();
+    const [registros, setRegistros] = useState<RegistroHumorApi[]>([]);
     const [humorSelecionadoId, setHumorSelecionadoId] = useState(4);
     const [observacao, setObservacao] = useState("");
     const [mensagem, setMensagem] = useState("");
+    const [erro, setErro] = useState("");
+    const [carregando, setCarregando] = useState(true);
+    const [salvando, setSalvando] = useState(false);
+    const [risco, setRisco] = useState<RiscoBurnout | null>(null);
     const dataHoje = hojeIso();
 
+    useEffect(() => {
+        async function carregar() {
+            if (!estudanteId) {
+                setErro("Usuário autenticado sem identificador de estudante.");
+                setCarregando(false);
+                return;
+            }
+
+            setCarregando(true);
+            setErro("");
+
+            try {
+                const [registrosResponse, riscoResponse] = await Promise.all([
+                    apiRequest(`/saude/registros/${estudanteId}`),
+                    apiRequest(`/saude/analise/${estudanteId}`),
+                ]);
+
+                if (!registrosResponse.ok) {
+                    throw new Error("Falha ao carregar registros de saúde.");
+                }
+
+                const registrosData = await registrosResponse.json() as RegistroHumorApi[];
+                setRegistros(registrosData);
+
+                if (riscoResponse.ok) {
+                    const riscoData = await riscoResponse.json() as { riscoBurnout?: RiscoBurnout } | RiscoBurnout;
+                    setRisco(typeof riscoData === "string" ? riscoData : riscoData.riscoBurnout ?? null);
+                }
+            } catch {
+                setErro("Não foi possível carregar os dados de saúde.");
+            } finally {
+                setCarregando(false);
+            }
+        }
+
+        carregar();
+    }, [estudanteId]);
+
     const registrosOrdenados = useMemo(
-        () => [...registros].sort((a, b) => b.data.localeCompare(a.data)),
+        () => [...registros].sort((a, b) => b.dataRegistro.localeCompare(a.dataRegistro)),
         [registros],
     );
 
     const estatisticas = useMemo(() => {
         const inicioSemana = inicioPeriodo(7);
         const inicioMes = inicioPeriodo(30);
-        const semana = registros.filter((registro) => registro.data >= inicioSemana);
-        const mes = registros.filter((registro) => registro.data >= inicioMes);
+        const semana = registros.filter((registro) => registro.dataRegistro >= inicioSemana);
+        const mes = registros.filter((registro) => registro.dataRegistro >= inicioMes);
         const criticos = registros
-            .filter((registro) => buscarHumor(registro.humorId).valor <= 2)
-            .sort((a, b) => b.data.localeCompare(a.data));
+            .filter((registro) => registro.nivelHumor <= 2 || registro.nivelExaustao >= 4)
+            .sort((a, b) => b.dataRegistro.localeCompare(a.dataRegistro));
 
         return {
             mediaSemanal: media(semana),
@@ -103,22 +140,45 @@ export default function Saude(){
             const data = new Date(hoje);
             data.setDate(hoje.getDate() - (29 - indice));
             const iso = data.toISOString().slice(0, 10);
-            const registro = registros.find((item) => item.data === iso);
+            const registro = registros.find((item) => item.dataRegistro.slice(0, 10) === iso);
             return {data: iso, registro};
         });
     }, [dataHoje, registros]);
 
-    function salvarRegistro() {
-        const novoRegistro: RegistroHumor = {
-            id: Date.now(),
-            data: dataHoje,
-            humorId: humorSelecionadoId,
-            observacao: observacao.trim() || "Sem observações.",
-        };
+    async function salvarRegistro() {
+        if (!estudanteId) {
+            setErro("Usuário autenticado sem identificador de estudante.");
+            return;
+        }
 
-        setRegistros((atuais) => [novoRegistro, ...atuais.filter((registro) => registro.data !== dataHoje)]);
-        setObservacao("");
-        setMensagem("Registro diário salvo.");
+        setSalvando(true);
+        setErro("");
+
+        try {
+            const response = await apiRequest("/saude/registros", {
+                method: "POST",
+                json: {
+                    nivelHumor: humorSelecionadoId,
+                    nivelExaustao: humores.find((humor) => humor.id === humorSelecionadoId)?.valor ?? 3,
+                    observacao: observacao.trim() || "Sem observações.",
+                    dataRegistro: new Date().toISOString(),
+                    estudanteId,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Falha ao salvar registro.");
+            }
+
+            const novoRegistro = await response.json() as RegistroHumorApi;
+            setRegistros((atuais) => [novoRegistro, ...atuais.filter((registro) => registro.dataRegistro.slice(0, 10) !== dataHoje)]);
+            setObservacao("");
+            setMensagem("Registro diário salvo.");
+        } catch {
+            setErro("Não foi possível salvar o registro.");
+        } finally {
+            setSalvando(false);
+        }
     }
 
     return (
@@ -131,6 +191,7 @@ export default function Saude(){
             </header>
 
             {mensagem && <p className="saude-message">{mensagem}</p>}
+            {erro && <p className="saude-message">{erro}</p>}
 
             <div className="saude-content">
                 <section className="saude-daily-panel">
@@ -165,8 +226,8 @@ export default function Saude(){
                         />
                     </label>
 
-                    <Button className="saude-save-button" icon={Save} variant="primary" onClick={salvarRegistro}>
-                        Salvar registro
+                    <Button className="saude-save-button" icon={Save} variant="primary" onClick={salvarRegistro} disabled={salvando || carregando}>
+                        {salvando ? "Salvando..." : "Salvar registro"}
                     </Button>
                 </section>
 
@@ -189,19 +250,19 @@ export default function Saude(){
                             <strong>{estatisticas.mediaMensal.toFixed(1)}</strong>
                         </article>
                         <article>
-                            <p>Dias mais críticos</p>
-                            <strong>{estatisticas.diasCriticos.length}</strong>
+                            <p>Risco</p>
+                            <strong>{risco ?? "N/D"}</strong>
                         </article>
                     </div>
 
                     <div className="saude-critical-list">
                         {estatisticas.diasCriticos.slice(0, 3).map((registro) => {
-                            const humor = buscarHumor(registro.humorId);
+                            const humor = buscarHumor(registro.nivelHumor);
 
                             return (
                                 <div key={registro.id}>
                                     <span>{humor.emoji}</span>
-                                    <p>{formatarData(registro.data)}</p>
+                                    <p>{formatarData(registro.dataRegistro)}</p>
                                     <strong>{humor.label}</strong>
                                 </div>
                             );
@@ -220,7 +281,7 @@ export default function Saude(){
 
                     <div className="saude-calendar">
                         {diasCalendario.map(({data, registro}) => {
-                            const humor = registro ? buscarHumor(registro.humorId) : null;
+                            const humor = registro ? buscarHumor(registro.nivelHumor) : null;
 
                             return (
                                 <div className={registro ? "has-record" : ""} key={data} title={formatarData(data)}>
@@ -243,16 +304,16 @@ export default function Saude(){
 
                     <div className="saude-timeline">
                         {registrosOrdenados.map((registro) => {
-                            const humor = buscarHumor(registro.humorId);
+                            const humor = buscarHumor(registro.nivelHumor);
 
                             return (
                                 <article key={registro.id}>
                                     <div className="saude-timeline-emoji">{humor.emoji}</div>
                                     <div>
                                         <h3>{humor.label}</h3>
-                                        <p>{registro.observacao}</p>
+                                        <p>{registro.observacao ?? "Sem observações."}</p>
                                     </div>
-                                    <time>{formatarData(registro.data)}</time>
+                                    <time>{formatarData(registro.dataRegistro)}</time>
                                 </article>
                             );
                         })}
@@ -260,5 +321,5 @@ export default function Saude(){
                 </section>
             </div>
         </section>
-    )
+    );
 }

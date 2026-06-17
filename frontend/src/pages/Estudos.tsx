@@ -1,251 +1,157 @@
-import {useMemo, useState} from "react";
-import {BookOpen, CalendarDays, Check, ClipboardList, FilePenLine, Plus, Save, Trash2, X} from "lucide-react";
+import {useEffect, useMemo, useState} from "react";
+import {BookOpen, CalendarDays, FilePenLine, Plus, Save, X} from "lucide-react";
 import Button from "../components/Button.tsx";
+import MetricCard from "../components/MetricCard.tsx";
+import PageHeader from "../components/PageHeader.tsx";
+import {apiRequest} from "../lib/api.ts";
+import {getCurrentUsuarioId} from "../lib/auth.ts";
 import "../styles/Estudos.css";
 
-type StatusDisciplina = "Em dia" | "Atenção" | "Atrasada";
-
-type Trabalho = {
-    id: number;
-    titulo: string;
-    entrega: string;
-    status: "Pendente" | "Entregue" | "Atrasado";
-};
-
-type Prova = {
-    id: number;
-    titulo: string;
-    data: string;
-    peso: number;
-};
-
-type Nota = {
-    id: number;
-    avaliacao: string;
-    valor: number;
-    maximo: number;
-};
-
-type DataImportante = {
-    id: number;
-    titulo: string;
-    data: string;
-};
-
-type Disciplina = {
-    id: number;
+type DisciplinaApi = {
+    id: string;
     nome: string;
-    professor: string;
-    proximaEntrega: string;
-    status: StatusDisciplina;
-    trabalhos: Trabalho[];
-    provas: Prova[];
-    notas: Nota[];
-    datasImportantes: DataImportante[];
+    codigo?: string | null;
+    cargaHoraria?: number | null;
+    cursoId?: string | null;
+    semestre?: number | null;
+    preRequisito?: string | null;
 };
 
-type DisciplinaForm = Pick<Disciplina, "nome" | "professor" | "proximaEntrega" | "status">;
+type AvaliacaoApi = {
+    id: string;
+    nome: string;
+    dataPrevista: string;
+    notaObtida?: number | null;
+    estudanteId?: string | null;
+    disciplinaId?: string | null;
+};
 
-const disciplinasIniciais: Disciplina[] = [
-    {
-        id: 1,
-        nome: "Algoritmos e Programação",
-        professor: "Prof. Marina Costa",
-        proximaEntrega: "2026-06-18",
-        status: "Atenção",
-        trabalhos: [
-            {id: 1, titulo: "Lista 4 - Recursão", entrega: "2026-06-18", status: "Pendente"},
-            {id: 2, titulo: "Projeto prático", entrega: "2026-06-30", status: "Pendente"},
-        ],
-        provas: [
-            {id: 1, titulo: "P2", data: "2026-06-24", peso: 4},
-            {id: 2, titulo: "Substitutiva", data: "2026-07-08", peso: 6},
-        ],
-        notas: [
-            {id: 1, avaliacao: "P1", valor: 7.5, maximo: 10},
-            {id: 2, avaliacao: "Lista 3", valor: 9, maximo: 10},
-        ],
-        datasImportantes: [
-            {id: 1, titulo: "Aula de revisão", data: "2026-06-20"},
-            {id: 2, titulo: "Fechamento de notas", data: "2026-07-12"},
-        ],
-    },
-    {
-        id: 2,
-        nome: "Banco de Dados",
-        professor: "Prof. Roberto Lima",
-        proximaEntrega: "2026-06-21",
-        status: "Em dia",
-        trabalhos: [
-            {id: 1, titulo: "Modelo lógico", entrega: "2026-06-21", status: "Entregue"},
-            {id: 2, titulo: "Normalização", entrega: "2026-06-27", status: "Pendente"},
-        ],
-        provas: [
-            {id: 1, titulo: "Prova SQL", data: "2026-07-02", peso: 5},
-        ],
-        notas: [
-            {id: 1, avaliacao: "Modelo conceitual", valor: 8.7, maximo: 10},
-        ],
-        datasImportantes: [
-            {id: 1, titulo: "Entrega do DER final", data: "2026-06-27"},
-        ],
-    },
-    {
-        id: 3,
-        nome: "Cálculo I",
-        professor: "Prof. Helena Azevedo",
-        proximaEntrega: "2026-06-14",
-        status: "Atrasada",
-        trabalhos: [
-            {id: 1, titulo: "Exercícios de derivadas", entrega: "2026-06-14", status: "Atrasado"},
-        ],
-        provas: [
-            {id: 1, titulo: "P3", data: "2026-06-29", peso: 5},
-        ],
-        notas: [
-            {id: 1, avaliacao: "P1", valor: 6.2, maximo: 10},
-            {id: 2, avaliacao: "P2", valor: 5.8, maximo: 10},
-        ],
-        datasImportantes: [
-            {id: 1, titulo: "Monitoria", data: "2026-06-17"},
-        ],
-    },
-];
+type EstudanteApi = {
+    id: string;
+    nomeCompleto: string;
+    matricula: string;
+    email: string;
+    cursoId?: string | null;
+    semestreAtual?: number | null;
+};
+
+type DisciplinaForm = {
+    nome: string;
+    codigo: string;
+    cargaHoraria: string;
+};
 
 const formVazio: DisciplinaForm = {
     nome: "",
-    professor: "",
-    proximaEntrega: "",
-    status: "Em dia",
+    codigo: "",
+    cargaHoraria: "",
 };
 
 function formatarData(data: string) {
-    if (!data) {
-        return "Sem data";
-    }
-
     return new Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
         month: "short",
         year: "numeric",
-    }).format(new Date(`${data}T12:00:00`));
-}
-
-function calcularMedia(notas: Nota[]) {
-    if (!notas.length) {
-        return 0;
-    }
-
-    const total = notas.reduce((soma, nota) => soma + (nota.valor / nota.maximo) * 10, 0);
-    return total / notas.length;
+    }).format(new Date(data));
 }
 
 export default function Estudos(){
-    const [disciplinas, setDisciplinas] = useState(disciplinasIniciais);
-    const [disciplinaSelecionadaId, setDisciplinaSelecionadaId] = useState(disciplinasIniciais[0]?.id);
+    const estudanteId = getCurrentUsuarioId();
+    const [disciplinas, setDisciplinas] = useState<DisciplinaApi[]>([]);
+    const [avaliacoes, setAvaliacoes] = useState<AvaliacaoApi[]>([]);
+    const [estudante, setEstudante] = useState<EstudanteApi | null>(null);
     const [formAberto, setFormAberto] = useState(false);
-    const [editandoId, setEditandoId] = useState<number | null>(null);
     const [form, setForm] = useState<DisciplinaForm>(formVazio);
-    const [abaAtiva, setAbaAtiva] = useState<"trabalhos" | "provas" | "notas" | "datas">("trabalhos");
+    const [erro, setErro] = useState("");
+    const [carregando, setCarregando] = useState(true);
 
-    const disciplinaSelecionada = useMemo(
-        () => disciplinas.find((disciplina) => disciplina.id === disciplinaSelecionadaId) ?? disciplinas[0],
-        [disciplinas, disciplinaSelecionadaId],
-    );
+    useEffect(() => {
+        async function carregar() {
+            setCarregando(true);
+            setErro("");
 
-    const totalPendencias = useMemo(
-        () => disciplinas.reduce((total, disciplina) => (
-            total + disciplina.trabalhos.filter((trabalho) => trabalho.status !== "Entregue").length
-        ), 0),
-        [disciplinas],
-    );
+            try {
+                const [disciplinasResponse, avaliacoesResponse] = await Promise.all([
+                    apiRequest("/disciplinas"),
+                    apiRequest("/avaliacoes"),
+                ]);
 
-    function abrirNovoCadastro() {
-        setForm(formVazio);
-        setEditandoId(null);
-        setFormAberto(true);
-    }
+                if (!disciplinasResponse.ok || !avaliacoesResponse.ok) {
+                    throw new Error("Falha ao carregar estudos.");
+                }
 
-    function abrirEdicao(disciplina: Disciplina) {
-        setForm({
-            nome: disciplina.nome,
-            professor: disciplina.professor,
-            proximaEntrega: disciplina.proximaEntrega,
-            status: disciplina.status,
-        });
-        setEditandoId(disciplina.id);
-        setFormAberto(true);
-    }
+                setDisciplinas(await disciplinasResponse.json() as DisciplinaApi[]);
+                setAvaliacoes(await avaliacoesResponse.json() as AvaliacaoApi[]);
 
-    function fecharFormulario() {
-        setFormAberto(false);
-        setEditandoId(null);
-        setForm(formVazio);
-    }
-
-    function salvarDisciplina() {
-        if (!form.nome.trim() || !form.professor.trim()) {
-            return;
-        }
-
-        if (editandoId) {
-            setDisciplinas((atuais) => atuais.map((disciplina) => (
-                disciplina.id === editandoId ? {...disciplina, ...form} : disciplina
-            )));
-            fecharFormulario();
-            return;
-        }
-
-        const novaDisciplina: Disciplina = {
-            id: Date.now(),
-            ...form,
-            trabalhos: [],
-            provas: [],
-            notas: [],
-            datasImportantes: [],
-        };
-
-        setDisciplinas((atuais) => [novaDisciplina, ...atuais]);
-        setDisciplinaSelecionadaId(novaDisciplina.id);
-        fecharFormulario();
-    }
-
-    function excluirDisciplina(id: number) {
-        setDisciplinas((atuais) => {
-            const restantes = atuais.filter((disciplina) => disciplina.id !== id);
-            if (disciplinaSelecionadaId === id) {
-                setDisciplinaSelecionadaId(restantes[0]?.id);
+                if (estudanteId) {
+                    const estudanteResponse = await apiRequest(`/estudantes/${estudanteId}`);
+                    if (estudanteResponse.ok) {
+                        setEstudante(await estudanteResponse.json() as EstudanteApi);
+                    } else {
+                        setEstudante(null);
+                    }
+                }
+            } catch {
+                setErro("Não foi possível carregar os dados de estudos.");
+            } finally {
+                setCarregando(false);
             }
-            return restantes;
-        });
+        }
+
+        carregar();
+    }, [estudanteId]);
+
+    const avaliacoesPendentes = useMemo(() => avaliacoes.filter((avaliacao) => avaliacao.notaObtida == null), [avaliacoes]);
+
+    async function salvarDisciplina() {
+        setErro("");
+
+        if (!form.nome.trim() || !form.cargaHoraria.trim()) {
+            setErro("Informe nome e carga horária.");
+            return;
+        }
+
+        try {
+            const response = await apiRequest("/disciplinas", {
+                method: "POST",
+                json: {
+                    nome: form.nome,
+                    codigo: form.codigo || null,
+                    cargaHoraria: Number(form.cargaHoraria),
+                    cursoId: estudante?.cursoId ?? null,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Falha ao salvar disciplina.");
+            }
+
+            const novaDisciplina = await response.json() as DisciplinaApi;
+            setDisciplinas((atuais) => [novaDisciplina, ...atuais]);
+            setForm(formVazio);
+            setFormAberto(false);
+        } catch {
+            setErro("Não foi possível salvar a disciplina.");
+        }
     }
 
     return (
         <section className="estudos-page">
-            <header className="estudos-header">
-                <div>
-                    <p className="estudos-kicker">Área acadêmica</p>
-                    <h1>Estudos</h1>
-                </div>
+            <PageHeader eyebrow="Área acadêmica" title="Estudos"/>
 
-                <Button className="estudos-primary-button" icon={Plus} variant="primary" onClick={abrirNovoCadastro}>
-                    Adicionar disciplina
-                </Button>
-            </header>
+            {erro && <p className="saude-message">{erro}</p>}
 
             <div className="estudos-summary">
-                <div>
-                    <span>{disciplinas.length}</span>
-                    <p>Disciplinas</p>
-                </div>
-                <div>
-                    <span>{totalPendencias}</span>
-                    <p>Pendências</p>
-                </div>
-                <div>
-                    <span>{disciplinas.filter((disciplina) => disciplina.status === "Atrasada").length}</span>
-                    <p>Atrasadas</p>
-                </div>
+                <MetricCard icon={BookOpen} label="Disciplinas" value={disciplinas.length} tone="blue"/>
+                <MetricCard icon={CalendarDays} label="Avaliações" value={avaliacoes.length} tone="green"/>
+                <MetricCard icon={FilePenLine} label="Pendentes" value={avaliacoesPendentes.length} tone="red"/>
+                <MetricCard icon={BookOpen} label="Semestre" value={estudante?.semestreAtual ?? "--"} tone="purple"/>
+            </div>
+
+            <div className="estudos-toolbar">
+                <Button className="estudos-primary-button" icon={Plus} variant="primary" onClick={() => setFormAberto((atual) => !atual)}>
+                    Nova disciplina
+                </Button>
             </div>
 
             {formAberto && (
@@ -260,43 +166,29 @@ export default function Estudos(){
                     </label>
 
                     <label>
-                        Professor
+                        Código
                         <input
-                            value={form.professor}
-                            onChange={(event) => setForm((atual) => ({...atual, professor: event.target.value}))}
-                            placeholder="Ex.: Prof. Ana Souza"
+                            value={form.codigo}
+                            onChange={(event) => setForm((atual) => ({...atual, codigo: event.target.value}))}
+                            placeholder="Ex.: ESW001"
                         />
                     </label>
 
                     <label>
-                        Próxima entrega
+                        Carga horária
                         <input
-                            type="date"
-                            value={form.proximaEntrega}
-                            onChange={(event) => setForm((atual) => ({...atual, proximaEntrega: event.target.value}))}
+                            inputMode="numeric"
+                            value={form.cargaHoraria}
+                            onChange={(event) => setForm((atual) => ({...atual, cargaHoraria: event.target.value}))}
+                            placeholder="Ex.: 60"
                         />
-                    </label>
-
-                    <label>
-                        Status
-                        <select
-                            value={form.status}
-                            onChange={(event) => setForm((atual) => ({
-                                ...atual,
-                                status: event.target.value as StatusDisciplina,
-                            }))}
-                        >
-                            <option>Em dia</option>
-                            <option>Atenção</option>
-                            <option>Atrasada</option>
-                        </select>
                     </label>
 
                     <div className="estudos-form-actions">
                         <button type="button" className="estudos-icon-button" onClick={salvarDisciplina} title="Salvar">
                             <Save size={18} aria-hidden="true"/>
                         </button>
-                        <button type="button" className="estudos-icon-button" onClick={fecharFormulario} title="Cancelar">
+                        <button type="button" className="estudos-icon-button" onClick={() => setFormAberto(false)} title="Cancelar">
                             <X size={18} aria-hidden="true"/>
                         </button>
                     </div>
@@ -304,125 +196,62 @@ export default function Estudos(){
             )}
 
             <div className="estudos-content">
-                <div className="estudos-list" aria-label="Lista de disciplinas">
-                    {disciplinas.map((disciplina) => (
-                        <article
-                            className={`estudos-disciplina ${disciplina.id === disciplinaSelecionada?.id ? "is-active" : ""}`}
-                            key={disciplina.id}
-                            onClick={() => setDisciplinaSelecionadaId(disciplina.id)}
-                        >
-                            <div className="estudos-disciplina-main">
-                                <div className="estudos-disciplina-icon">
-                                    <BookOpen size={20} aria-hidden="true"/>
+                <section className="estudos-panel">
+                    <div className="estudos-panel-header">
+                        <h2>Disciplinas</h2>
+                        <span>{carregando ? "Carregando..." : `${disciplinas.length} itens`}</span>
+                    </div>
+
+                    <div className="estudos-list">
+                        {disciplinas.map((disciplina) => (
+                            <article className="estudos-disciplina" key={disciplina.id}>
+                                <div className="estudos-disciplina-main">
+                                    <div className="estudos-disciplina-icon">
+                                        <BookOpen size={20} aria-hidden="true"/>
+                                    </div>
+                                    <div>
+                                        <h3>{disciplina.nome}</h3>
+                                        <p>{disciplina.codigo ?? "Sem código"}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h2>{disciplina.nome}</h2>
-                                    <p>{disciplina.professor}</p>
+
+                                <div className="estudos-disciplina-meta">
+                                    <span>{disciplina.cargaHoraria ?? "--"}h</span>
+                                    <strong>{disciplina.semestre ? `${disciplina.semestre}º semestre` : "Sem semestre"}</strong>
                                 </div>
-                            </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
 
-                            <div className="estudos-disciplina-meta">
-                                <span>
-                                    <CalendarDays size={16} aria-hidden="true"/>
-                                    {formatarData(disciplina.proximaEntrega)}
-                                </span>
-                                <strong className={`estudos-status status-${disciplina.status.toLowerCase().replace("ç", "c").replace(" ", "-")}`}>
-                                    {disciplina.status}
-                                </strong>
-                            </div>
+                <section className="estudos-panel">
+                    <div className="estudos-panel-header">
+                        <h2>Avaliações</h2>
+                        <span>{avaliacoesPendentes.length} pendentes</span>
+                    </div>
 
-                            <div className="estudos-card-actions">
-                                <button type="button" onClick={(event) => {
-                                    event.stopPropagation();
-                                    abrirEdicao(disciplina);
-                                }} title="Editar disciplina">
-                                    <FilePenLine size={17} aria-hidden="true"/>
-                                </button>
-                                <button type="button" onClick={(event) => {
-                                    event.stopPropagation();
-                                    excluirDisciplina(disciplina.id);
-                                }} title="Excluir disciplina">
-                                    <Trash2 size={17} aria-hidden="true"/>
-                                </button>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-
-                <aside className="estudos-details">
-                    {disciplinaSelecionada ? (
-                        <>
-                            <div className="estudos-details-header">
-                                <div>
-                                    <p>Detalhes da disciplina</p>
-                                    <h2>{disciplinaSelecionada.nome}</h2>
-                                    <span>{disciplinaSelecionada.professor}</span>
+                    <div className="estudos-list">
+                        {avaliacoes.map((avaliacao) => (
+                            <article className="estudos-disciplina" key={avaliacao.id}>
+                                <div className="estudos-disciplina-main">
+                                    <div className="estudos-disciplina-icon">
+                                        <CalendarDays size={20} aria-hidden="true"/>
+                                    </div>
+                                    <div>
+                                        <h3>{avaliacao.nome}</h3>
+                                        <p>{avaliacao.notaObtida == null ? "Sem nota lançada" : `Nota: ${avaliacao.notaObtida.toFixed(1)}`}</p>
+                                    </div>
                                 </div>
-                                <strong>{calcularMedia(disciplinaSelecionada.notas).toFixed(1)}</strong>
-                            </div>
 
-                            <div className="estudos-tabs" role="tablist" aria-label="Detalhes">
-                                <button type="button" className={abaAtiva === "trabalhos" ? "is-active" : ""} onClick={() => setAbaAtiva("trabalhos")}>Trabalhos</button>
-                                <button type="button" className={abaAtiva === "provas" ? "is-active" : ""} onClick={() => setAbaAtiva("provas")}>Provas</button>
-                                <button type="button" className={abaAtiva === "notas" ? "is-active" : ""} onClick={() => setAbaAtiva("notas")}>Notas</button>
-                                <button type="button" className={abaAtiva === "datas" ? "is-active" : ""} onClick={() => setAbaAtiva("datas")}>Datas</button>
-                            </div>
-
-                            <div className="estudos-detail-list">
-                                {abaAtiva === "trabalhos" && disciplinaSelecionada.trabalhos.map((trabalho) => (
-                                    <div className="estudos-detail-row" key={trabalho.id}>
-                                        <ClipboardList size={18} aria-hidden="true"/>
-                                        <div>
-                                            <h3>{trabalho.titulo}</h3>
-                                            <p>{formatarData(trabalho.entrega)}</p>
-                                        </div>
-                                        <span>{trabalho.status}</span>
-                                    </div>
-                                ))}
-
-                                {abaAtiva === "provas" && disciplinaSelecionada.provas.map((prova) => (
-                                    <div className="estudos-detail-row" key={prova.id}>
-                                        <CalendarDays size={18} aria-hidden="true"/>
-                                        <div>
-                                            <h3>{prova.titulo}</h3>
-                                            <p>{formatarData(prova.data)}</p>
-                                        </div>
-                                        <span>Peso {prova.peso}</span>
-                                    </div>
-                                ))}
-
-                                {abaAtiva === "notas" && disciplinaSelecionada.notas.map((nota) => (
-                                    <div className="estudos-detail-row" key={nota.id}>
-                                        <Check size={18} aria-hidden="true"/>
-                                        <div>
-                                            <h3>{nota.avaliacao}</h3>
-                                            <p>{nota.maximo.toFixed(1)} pontos</p>
-                                        </div>
-                                        <span>{nota.valor.toFixed(1)}</span>
-                                    </div>
-                                ))}
-
-                                {abaAtiva === "datas" && disciplinaSelecionada.datasImportantes.map((data) => (
-                                    <div className="estudos-detail-row" key={data.id}>
-                                        <CalendarDays size={18} aria-hidden="true"/>
-                                        <div>
-                                            <h3>{data.titulo}</h3>
-                                            <p>{formatarData(data.data)}</p>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {abaAtiva === "trabalhos" && !disciplinaSelecionada.trabalhos.length && <p className="estudos-empty">Nenhum trabalho cadastrado.</p>}
-                                {abaAtiva === "provas" && !disciplinaSelecionada.provas.length && <p className="estudos-empty">Nenhuma prova cadastrada.</p>}
-                                {abaAtiva === "notas" && !disciplinaSelecionada.notas.length && <p className="estudos-empty">Nenhuma nota cadastrada.</p>}
-                                {abaAtiva === "datas" && !disciplinaSelecionada.datasImportantes.length && <p className="estudos-empty">Nenhuma data cadastrada.</p>}
-                            </div>
-                        </>
-                    ) : (
-                        <p className="estudos-empty">Nenhuma disciplina cadastrada.</p>
-                    )}
-                </aside>
+                                <div className="estudos-disciplina-meta">
+                                    <span>{formatarData(avaliacao.dataPrevista)}</span>
+                                    <strong>{avaliacao.disciplinaId ?? "Sem disciplina"}</strong>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
             </div>
         </section>
-    )
+    );
 }

@@ -9,7 +9,7 @@ const links = [
     {to: "/estagio", label: "Estágio", icon: BriefcaseBusiness},
     {to: "/candidaturas", label: "Candidaturas", icon: Send},
     {to: "/saude", label: "Saúde", icon: HeartPulse},
-    {to: "/user", label: "User", icon: User},
+    {to: "/user", label: "Perfil", icon: User},
 ];
 
 export default function Sidebar(){

@@ -1,53 +1,47 @@
-import {useState} from "react";
-import {Bell, LogOut, Mail, Save, ShieldCheck, UserRound} from "lucide-react";
+import {useEffect, useState} from "react";
+import {LogOut, ShieldCheck, UserRound} from "lucide-react";
 import Button from "../components/Button.tsx";
 import PageHeader from "../components/PageHeader.tsx";
+import {apiRequest} from "../lib/api.ts";
+import {getCurrentUsuarioId} from "../lib/auth.ts";
 import "../styles/User.css";
 
-type PerfilUsuario = {
-    nome: string;
+type EstudanteApi = {
+    id: string;
+    nomeCompleto: string;
+    matricula: string;
     email: string;
-    curso: string;
-    semestre: string;
-};
-
-type Preferencias = {
-    entregas: boolean;
-    provas: boolean;
-    financas: boolean;
-    saude: boolean;
-};
-
-const perfilInicial: PerfilUsuario = {
-    nome: "Maria Oliveira",
-    email: "maria.oliveira@ufms.br",
-    curso: "Ciência da Computação",
-    semestre: "5º semestre",
-};
-
-const preferenciasIniciais: Preferencias = {
-    entregas: true,
-    provas: true,
-    financas: false,
-    saude: true,
+    cursoId?: string | null;
+    semestreAtual?: number | null;
 };
 
 export default function User(){
-    const [perfil, setPerfil] = useState(perfilInicial);
-    const [preferencias, setPreferencias] = useState(preferenciasIniciais);
-    const [mensagem, setMensagem] = useState("");
+    const estudanteId = getCurrentUsuarioId();
+    const [estudante, setEstudante] = useState<EstudanteApi | null>(null);
+    const [erro, setErro] = useState("");
 
-    function atualizarPerfil(campo: keyof PerfilUsuario, valor: string) {
-        setPerfil((atual) => ({...atual, [campo]: valor}));
-    }
+    useEffect(() => {
+        async function carregar() {
+            if (!estudanteId) {
+                setErro("Usuário autenticado sem identificador de estudante.");
+                return;
+            }
 
-    function alternarPreferencia(campo: keyof Preferencias) {
-        setPreferencias((atual) => ({...atual, [campo]: !atual[campo]}));
-    }
+            try {
+                const response = await apiRequest(`/estudantes/${estudanteId}`);
 
-    function salvarConfiguracoes() {
-        setMensagem("Configurações salvas localmente.");
-    }
+                if (!response.ok) {
+                    throw new Error("Falha ao carregar estudante.");
+                }
+
+                setEstudante(await response.json() as EstudanteApi);
+            } catch {
+                setErro("Não foi possível carregar o perfil do estudante.");
+            }
+        }
+
+        carregar();
+    }, [estudanteId]);
 
     function sair() {
         localStorage.removeItem("ufmsos.token");
@@ -59,12 +53,11 @@ export default function User(){
             <div className="user-shell">
                 <PageHeader
                     eyebrow="Conta"
-                    title="Configurações de usuário"
-                    actions={<Button className="user-save-button" icon={Save} variant="primary" onClick={salvarConfiguracoes}>Salvar</Button>}
+                    title="Perfil do estudante"
                 />
             </div>
 
-            {mensagem && <p className="user-message">{mensagem}</p>}
+            {erro && <p className="saude-message">{erro}</p>}
 
             <div className="user-content">
                 <section className="user-card user-profile-card">
@@ -73,96 +66,26 @@ export default function User(){
                     </div>
 
                     <div>
-                        <h2>{perfil.nome}</h2>
-                        <p>{perfil.email}</p>
-                        <span>{perfil.curso}</span>
-                    </div>
-                </section>
-
-                <section className="user-card">
-                    <div className="user-section-title">
-                        <UserRound size={20} aria-hidden="true"/>
-                        <h2>Perfil</h2>
-                    </div>
-
-                    <div className="user-form-grid">
-                        <label>
-                            Nome
-                            <input value={perfil.nome} onChange={(event) => atualizarPerfil("nome", event.target.value)}/>
-                        </label>
-
-                        <label>
-                            E-mail
-                            <input type="email" value={perfil.email} onChange={(event) => atualizarPerfil("email", event.target.value)}/>
-                        </label>
-
-                        <label>
-                            Curso
-                            <input value={perfil.curso} onChange={(event) => atualizarPerfil("curso", event.target.value)}/>
-                        </label>
-
-                        <label>
-                            Semestre
-                            <input value={perfil.semestre} onChange={(event) => atualizarPerfil("semestre", event.target.value)}/>
-                        </label>
-                    </div>
-                </section>
-
-                <section className="user-card user-notifications-card">
-                    <div className="user-section-title">
-                        <Bell size={20} aria-hidden="true"/>
-                        <h2>Notificações</h2>
-                    </div>
-
-                    <div className="user-settings-list">
-                        <label className="user-toggle-row">
-                            <div>
-                                <strong>Entregas de trabalhos</strong>
-                                <p>Avisos sobre prazos próximos e trabalhos atrasados.</p>
-                            </div>
-                            <input type="checkbox" checked={preferencias.entregas} onChange={() => alternarPreferencia("entregas")}/>
-                        </label>
-
-                        <label className="user-toggle-row">
-                            <div>
-                                <strong>Provas</strong>
-                                <p>Lembretes de avaliações e revisões cadastradas.</p>
-                            </div>
-                            <input type="checkbox" checked={preferencias.provas} onChange={() => alternarPreferencia("provas")}/>
-                        </label>
-
-                        <label className="user-toggle-row">
-                            <div>
-                                <strong>Finanças</strong>
-                                <p>Alertas de vencimentos, auxílios e gastos planejados.</p>
-                            </div>
-                            <input type="checkbox" checked={preferencias.financas} onChange={() => alternarPreferencia("financas")}/>
-                        </label>
-
-                        <label className="user-toggle-row">
-                            <div>
-                                <strong>Saúde</strong>
-                                <p>Lembretes de consultas, medicamentos e hábitos.</p>
-                            </div>
-                            <input type="checkbox" checked={preferencias.saude} onChange={() => alternarPreferencia("saude")}/>
-                        </label>
+                        <h2>{estudante?.nomeCompleto ?? "Sem dados"}</h2>
+                        <p>{estudante?.email ?? "Sem e-mail"}</p>
+                        <span>{estudante?.matricula ?? "Sem matrícula"}</span>
                     </div>
                 </section>
 
                 <section className="user-card">
                     <div className="user-section-title">
                         <ShieldCheck size={20} aria-hidden="true"/>
-                        <h2>Segurança</h2>
+                        <h2>Dados acadêmicos</h2>
                     </div>
 
                     <div className="user-security-grid">
                         <div>
-                            <Mail size={18} aria-hidden="true"/>
-                            <span>E-mail verificado</span>
+                            <ShieldCheck size={18} aria-hidden="true"/>
+                            <span>{estudante?.cursoId ?? "Curso não identificado"}</span>
                         </div>
                         <div>
                             <ShieldCheck size={18} aria-hidden="true"/>
-                            <span>Login local liberado</span>
+                            <span>{estudante?.semestreAtual ? `${estudante.semestreAtual}º semestre` : "Sem semestre informado"}</span>
                         </div>
                     </div>
 
@@ -172,5 +95,5 @@ export default function User(){
                 </section>
             </div>
         </section>
-    )
+    );
 }
