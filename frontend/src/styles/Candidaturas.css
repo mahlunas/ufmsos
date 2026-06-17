@@ -1,0 +1,339 @@
+.candidaturas-page {
+    min-height: 100vh;
+    padding: 32px;
+    background: #f6f8fb;
+    color: #172033;
+}
+
+.candidaturas-header,
+.candidaturas-form,
+.candidaturas-board {
+    max-width: 1360px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.candidaturas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.candidaturas-header p,
+.candidaturas-card p,
+.candidaturas-card-date,
+.candidaturas-empty {
+    margin: 0;
+    color: #66758a;
+}
+
+.candidaturas-header > div p {
+    margin-bottom: 6px;
+    color: #58708f;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.candidaturas-header h1,
+.candidaturas-column-header h2,
+.candidaturas-card h3 {
+    margin: 0;
+}
+
+.candidaturas-header h1 {
+    font-size: 2rem;
+}
+
+.candidaturas-primary-button,
+.candidaturas-form-actions button,
+.candidaturas-next-button,
+.candidaturas-decision-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 16px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+}
+
+.candidaturas-primary-button {
+    background: #176b5d;
+    color: #ffffff;
+}
+
+.candidaturas-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.8fr 1.2fr auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 18px;
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+}
+
+.candidaturas-form label {
+    display: grid;
+    gap: 6px;
+    color: #41516a;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.candidaturas-form input {
+    min-height: 40px;
+    border: 1px solid #c9d3e0;
+    border-radius: 8px;
+    padding: 0 10px;
+    color: #172033;
+    background: #ffffff;
+    font: inherit;
+}
+
+.candidaturas-form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.candidaturas-form-actions button:first-child {
+    background: #176b5d;
+    color: #ffffff;
+}
+
+.candidaturas-form-actions button:last-child {
+    background: #edf2f7;
+    color: #172033;
+}
+
+.candidaturas-board {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(220px, 1fr));
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.candidaturas-column {
+    min-height: 520px;
+    border: 1px solid #dfe6ef;
+    border-radius: 8px;
+    padding: 12px;
+    background: #ffffff;
+}
+
+.candidaturas-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.candidaturas-column-header h2 {
+    font-size: 1rem;
+}
+
+.candidaturas-column-header span {
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #edf2f7;
+    color: #41516a;
+    font-weight: 800;
+}
+
+.candidaturas-cards {
+    display: grid;
+    gap: 10px;
+}
+
+.candidaturas-card {
+    display: grid;
+    gap: 12px;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fbfcfe;
+}
+
+.candidaturas-card-main {
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+}
+
+.candidaturas-card-main svg,
+.candidaturas-card-date svg {
+    flex: 0 0 auto;
+    color: #176b5d;
+}
+
+.candidaturas-card h3 {
+    font-size: 1rem;
+}
+
+.candidaturas-card-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.candidaturas-notes {
+    line-height: 1.45;
+}
+
+.candidaturas-next-button {
+    width: 100%;
+    min-height: 38px;
+    background: #edf2f7;
+    color: #172033;
+}
+
+.candidaturas-decision-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    min-width: 0;
+}
+
+.candidaturas-decision-actions button {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 0 8px;
+}
+
+.candidaturas-approve-button {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.candidaturas-reject-button {
+    background: #fde8e8;
+    color: #a51f24;
+}
+
+.candidaturas-empty {
+    border: 1px dashed #c9d3e0;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+}
+
+.etapa-aplicando .candidaturas-column-header span {
+    background: #e6f3ef;
+    color: #176b5d;
+}
+
+.etapa-triagem .candidaturas-column-header span {
+    background: #e9f0ff;
+    color: #2456a6;
+}
+
+.etapa-entrevista .candidaturas-column-header span {
+    background: #fff3d7;
+    color: #8a5b00;
+}
+
+.etapa-teste-tecnico .candidaturas-column-header span {
+    background: #f0e9ff;
+    color: #6042a6;
+}
+
+.etapa-aprovado .candidaturas-column-header span {
+    background: #e8f5ec;
+    color: #176b35;
+}
+
+.etapa-rejeitado .candidaturas-column-header span {
+    background: #fde8e8;
+    color: #a51f24;
+}
+
+@media (max-width: 1100px) {
+    .candidaturas-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .candidaturas-form-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 620px) {
+    .candidaturas-page {
+        padding: 18px;
+    }
+
+    .candidaturas-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .candidaturas-form {
+        grid-template-columns: 1fr;
+    }
+
+    .candidaturas-board {
+        grid-template-columns: repeat(6, 260px);
+    }
+}
+
+.candidaturas-page {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--app-ink);
+}
+
+.candidaturas-header,
+.candidaturas-form,
+.candidaturas-board {
+    max-width: none;
+}
+
+.candidaturas-header > div p {
+    color: var(--app-blue);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+}
+
+.candidaturas-header h1 {
+    font-size: 1.55rem;
+}
+
+.candidaturas-primary-button,
+.candidaturas-form-actions button,
+.candidaturas-next-button,
+.candidaturas-decision-actions button {
+    border-radius: 999px;
+}
+
+.candidaturas-primary-button,
+.candidaturas-form-actions button:first-child {
+    background: var(--app-blue);
+}
+
+.candidaturas-form,
+.candidaturas-column {
+    border-color: var(--app-line);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.candidaturas-card-main svg,
+.candidaturas-card-date svg {
+    color: var(--app-blue);
+}

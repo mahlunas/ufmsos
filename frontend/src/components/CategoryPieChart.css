@@ -1,0 +1,90 @@
+.category-pie {
+    display: grid;
+    gap: 16px;
+}
+
+.category-pie-chart {
+    position: relative;
+    min-height: 260px;
+}
+
+.category-pie-chart-canvas {
+    height: 260px;
+}
+
+.category-pie-chart-canvas svg {
+    overflow: visible;
+}
+
+.category-pie-center {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    z-index: 1;
+    display: grid;
+    gap: 2px;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.category-pie-center span {
+    color: var(--app-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.category-pie-center strong {
+    color: var(--app-ink);
+    font-size: 1.12rem;
+}
+
+.category-pie-legend {
+    display: grid;
+    gap: 10px;
+}
+
+.category-pie-legend div {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+    min-height: 38px;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    padding: 0 10px;
+}
+
+.category-pie-legend span {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+}
+
+.category-pie-legend p {
+    margin: 0;
+    color: #41516a;
+    font-weight: 800;
+}
+
+.category-pie-legend strong {
+    color: #172033;
+}
+
+.category-pie-empty {
+    margin: 0;
+    padding: 16px;
+    border: 1px dashed #c9d3e0;
+    border-radius: 8px;
+    color: #66758a;
+    text-align: center;
+}
+
+@media (max-width: 620px) {
+    .category-pie-chart {
+        min-height: 240px;
+    }
+
+    .category-pie-chart-canvas {
+        height: 240px;
+    }
+}

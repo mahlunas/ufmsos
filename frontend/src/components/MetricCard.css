@@ -1,0 +1,72 @@
+.metric-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    min-height: 104px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--app-card);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.metric-card-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    color: var(--app-blue);
+    background: var(--app-blue-soft);
+}
+
+.metric-card.tone-green .metric-card-icon {
+    color: var(--app-green);
+    background: #e6f6f1;
+}
+
+.metric-card.tone-red .metric-card-icon {
+    color: var(--app-red);
+    background: #fff0f0;
+}
+
+.metric-card.tone-yellow .metric-card-icon {
+    color: var(--app-yellow);
+    background: #fff6df;
+}
+
+.metric-card.tone-purple .metric-card-icon {
+    color: var(--app-purple);
+    background: #f0edff;
+}
+
+.metric-card p,
+.metric-card span {
+    margin: 0;
+    color: var(--app-muted);
+}
+
+.metric-card p {
+    overflow: hidden;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.metric-card strong {
+    display: block;
+    overflow: hidden;
+    margin-top: 5px;
+    color: var(--app-ink);
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.metric-card > span:not(.metric-card-icon) {
+    grid-column: 1 / -1;
+    font-size: 0.82rem;
+}

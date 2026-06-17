@@ -1,0 +1,39 @@
+.app-layout {
+    display: grid;
+    grid-template-columns: 206px minmax(0, 1fr);
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 0;
+    background: var(--app-card);
+}
+
+.app-sidebar {
+    background: linear-gradient(180deg, var(--app-blue) 0%, var(--app-blue-dark) 100%);
+    color: #ffffff;
+}
+
+.app-main {
+    min-width: 0;
+    padding: 28px;
+    background: var(--app-bg);
+}
+
+@media (max-width: 780px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .app-sidebar {
+        min-width: 0;
+    }
+
+    .app-main {
+        padding: 16px 14px 24px;
+    }
+}

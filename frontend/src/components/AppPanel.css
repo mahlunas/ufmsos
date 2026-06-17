@@ -1,0 +1,10 @@
+.app-panel {
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    background: var(--app-card);
+    box-shadow: 0 12px 30px rgba(38, 67, 108, 0.06);
+}
+
+.app-panel-pad {
+    padding: 18px;
+}

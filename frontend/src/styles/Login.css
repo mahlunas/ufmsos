@@ -1,0 +1,101 @@
+.login-page {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 24px;
+    background: linear-gradient(135deg, #2368c9 0%, #174fa4 100%);
+}
+
+.login-card {
+    display: grid;
+    gap: 24px;
+    width: min(430px, 100%);
+    border-radius: 8px 28px 28px 8px;
+    padding: 30px;
+    background: #ffffff;
+    box-shadow: var(--app-shadow);
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-brand span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    color: #ffffff;
+    background: var(--app-blue);
+    font-weight: 900;
+}
+
+.login-brand strong {
+    color: var(--app-ink);
+    font-size: 1.08rem;
+}
+
+.login-copy {
+    display: grid;
+    gap: 8px;
+}
+
+.login-copy svg {
+    color: var(--app-blue);
+}
+
+.login-copy p,
+.login-copy h1,
+.login-form label,
+.login-error {
+    margin: 0;
+}
+
+.login-copy p {
+    color: var(--app-blue);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.login-copy h1 {
+    font-size: 1.7rem;
+}
+
+.login-form {
+    display: grid;
+    gap: 10px;
+}
+
+.login-form label {
+    color: var(--app-muted);
+    font-size: 0.84rem;
+    font-weight: 800;
+}
+
+.login-form input {
+    min-height: 42px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    padding: 0 12px;
+    color: var(--app-ink);
+    background: #f8fbff;
+    outline: none;
+}
+
+.login-form input:focus {
+    border-color: var(--app-blue);
+    box-shadow: 0 0 0 3px rgba(33, 103, 200, 0.14);
+}
+
+.login-error {
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #a92828;
+    background: #fff0f0;
+    font-size: 0.86rem;
+    font-weight: 800;
+}

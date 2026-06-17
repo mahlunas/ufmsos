@@ -1,0 +1,130 @@
+.financas-page {
+    color: var(--app-ink);
+}
+
+.financas-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.financas-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 18px;
+}
+
+.financas-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--app-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.financas-form input {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    padding: 0 11px;
+    color: var(--app-ink);
+    background: #f8fbff;
+    outline: none;
+}
+
+.financas-form input:focus {
+    border-color: var(--app-blue);
+    box-shadow: 0 0 0 3px rgba(33, 103, 200, 0.14);
+}
+
+.financas-form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.financas-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 18px;
+}
+
+.financas-transactions-panel {
+    grid-column: 1 / -1;
+}
+
+.financas-chart-shell {
+    display: grid;
+    gap: 14px;
+}
+
+.financas-chart-canvas {
+    width: 100%;
+    min-height: 260px;
+}
+
+.financas-chart-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.financas-chart-summary-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    padding: 0 12px;
+    color: var(--app-muted);
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.financas-chart-summary-row strong {
+    margin-left: auto;
+    color: var(--app-ink);
+    font-size: 0.9rem;
+}
+
+.financas-chart-key {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+}
+
+.financas-chart-key.income {
+    background: var(--app-green);
+}
+
+.financas-chart-key.expense {
+    background: var(--app-red);
+}
+
+@media (max-width: 1120px) {
+    .financas-cards,
+    .financas-form,
+    .financas-content {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .financas-form-actions,
+    .financas-chart-panel,
+    .financas-category-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 720px) {
+    .financas-cards,
+    .financas-form,
+    .financas-content,
+    .financas-chart-summary {
+        grid-template-columns: 1fr;
+    }
+}
