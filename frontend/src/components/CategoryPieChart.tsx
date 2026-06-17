@@ -1,3 +1,6 @@
+import {Chart} from "@highcharts/react";
+import {PieSeries} from "@highcharts/react/series/Pie";
+import type {ChartOptions} from "@highcharts/react";
 import "./CategoryPieChart.css";
 
 type CategoryPieChartItem = {
@@ -11,18 +14,6 @@ type CategoryPieChartProps = {
     totalLabel: string;
 };
 
-function buildSlicePath(startPercent: number, endPercent: number) {
-    const startAngle = startPercent * Math.PI * 2 - Math.PI / 2;
-    const endAngle = endPercent * Math.PI * 2 - Math.PI / 2;
-    const largeArc = endPercent - startPercent > 0.5 ? 1 : 0;
-    const startX = 50 + 42 * Math.cos(startAngle);
-    const startY = 50 + 42 * Math.sin(startAngle);
-    const endX = 50 + 42 * Math.cos(endAngle);
-    const endY = 50 + 42 * Math.sin(endAngle);
-
-    return `M 50 50 L ${startX} ${startY} A 42 42 0 ${largeArc} 1 ${endX} ${endY} Z`;
-}
-
 export default function CategoryPieChart({items, totalLabel}: CategoryPieChartProps) {
     const total = items.reduce((sum, item) => sum + item.value, 0);
 
@@ -30,22 +21,48 @@ export default function CategoryPieChart({items, totalLabel}: CategoryPieChartPr
         return <p className="category-pie-empty">Nenhuma despesa por categoria.</p>;
     }
 
-    const slices = items.reduce<Array<CategoryPieChartItem & {start: number; end: number}>>((acc, item) => {
-        const previousEnd = acc.at(-1)?.end ?? 0;
-        const end = previousEnd + item.value / total;
-        return [...acc, {...item, start: previousEnd, end}];
-    }, []);
+    const options: ChartOptions = {
+        chart: {
+            type: "pie",
+            backgroundColor: "transparent",
+            spacing: [0, 0, 0, 0],
+        },
+        credits: {
+            enabled: false,
+        },
+        title: {
+            text: "",
+        },
+        tooltip: {
+            enabled: true,
+        },
+        legend: {
+            enabled: false,
+        },
+        plotOptions: {
+            pie: {
+                borderWidth: 0,
+                innerSize: "68%",
+                dataLabels: {
+                    enabled: false,
+                },
+            },
+        },
+    };
+
+    const pieData = items.map((item) => ({
+        name: item.label,
+        y: item.value,
+        color: item.color,
+    }));
 
     return (
         <div className="category-pie">
             <div className="category-pie-chart" aria-label="Gastos por categoria">
-                <svg viewBox="0 0 100 100" role="img">
-                    {slices.map((item) => (
-                        <path d={buildSlicePath(item.start, item.end)} fill={item.color} key={item.label}/>
-                    ))}
-                    <circle cx="50" cy="50" r="22" fill="#ffffff"/>
-                </svg>
-                <div>
+                <Chart containerProps={{className: "category-pie-chart-canvas"}} options={options} height={260}>
+                    <PieSeries data={pieData}/>
+                </Chart>
+                <div className="category-pie-center">
                     <span>Total</span>
                     <strong>{totalLabel}</strong>
                 </div>

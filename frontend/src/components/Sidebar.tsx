@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import {BriefcaseBusiness, DatabaseBackup, GraduationCap, HeartPulse, Home, Landmark, Send, User} from "lucide-react";
+import {BriefcaseBusiness, GraduationCap, HeartPulse, Home, Landmark, Send, User} from "lucide-react";
 import "./Sidebar.css";
 
 const links = [
@@ -29,14 +29,6 @@ export default function Sidebar(){
                 ))}
             </nav>
 
-            <div className="sidebar-storage" aria-label="Resumo de armazenamento">
-                <div>
-                    <DatabaseBackup size={17} aria-hidden="true"/>
-                    <strong>Dados locais</strong>
-                </div>
-                <span><i style={{width: "62%"}}/> </span>
-                <p>6 módulos ativos</p>
-            </div>
         </div>
     )
 }

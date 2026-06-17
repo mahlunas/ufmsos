@@ -1,5 +1,7 @@
 import {useMemo, useState} from "react";
 import {ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, WalletCards} from "lucide-react";
+import {Chart} from "@highcharts/react";
+import {ColumnSeries} from "@highcharts/react/series/Column";
 import AppPanel from "../components/AppPanel.tsx";
 import Button from "../components/Button.tsx";
 import CategoryPieChart from "../components/CategoryPieChart.tsx";
@@ -106,8 +108,6 @@ export default function Financas(){
             economia: receitas * 0.2 - despesas * 0.05,
         };
     }, [transacoes]);
-
-    const maiorValorGrafico = Math.max(resumo.receitas, resumo.despesas, 1);
 
     const gastosPorCategoria = useMemo(() => {
         const categorias = transacoes
@@ -222,27 +222,78 @@ export default function Financas(){
                 <AppPanel className="financas-chart-panel app-panel-pad">
                     <SectionTitle title="Entradas x Saídas" subtitle="Comparativo do mês atual"/>
 
-                    <div className="financas-chart">
-                        <div className="financas-chart-row">
-                            <span>Entradas</span>
-                            <div className="financas-chart-track">
-                                <div
-                                    className="financas-chart-bar income"
-                                    style={{width: `${(resumo.receitas / maiorValorGrafico) * 100}%`}}
-                                />
-                            </div>
-                            <strong>{formatarMoeda(resumo.receitas)}</strong>
-                        </div>
+                    <div className="financas-chart-shell">
+                        <Chart
+                            containerProps={{className: "financas-chart-canvas"}}
+                            height={260}
+                            options={{
+                                chart: {
+                                    type: "column",
+                                    backgroundColor: "transparent",
+                                    spacing: [0, 0, 0, 0],
+                                },
+                                credits: {
+                                    enabled: false,
+                                },
+                                title: {
+                                    text: "",
+                                },
+                                legend: {
+                                    enabled: false,
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                },
+                                xAxis: {
+                                    categories: ["Entradas", "Saídas"],
+                                    lineWidth: 0,
+                                    tickLength: 0,
+                                    labels: {
+                                        style: {
+                                            color: "#66758a",
+                                            fontSize: "12px",
+                                            fontWeight: "800",
+                                        },
+                                    },
+                                },
+                                yAxis: {
+                                    visible: false,
+                                    title: {
+                                        text: "",
+                                    },
+                                },
+                                plotOptions: {
+                                    column: {
+                                        borderWidth: 0,
+                                        borderRadius: 8,
+                                        groupPadding: 0.28,
+                                        pointPadding: 0.08,
+                                        maxPointWidth: 52,
+                                    },
+                                },
+                            }}
+                        >
+                            <ColumnSeries
+                                name="Fluxo financeiro"
+                                data={[
+                                    {y: resumo.receitas, color: "#176b5d"},
+                                    {y: resumo.despesas, color: "#a51f24"},
+                                ]}
+                            />
+                        </Chart>
 
-                        <div className="financas-chart-row">
-                            <span>Saídas</span>
-                            <div className="financas-chart-track">
-                                <div
-                                    className="financas-chart-bar expense"
-                                    style={{width: `${(resumo.despesas / maiorValorGrafico) * 100}%`}}
-                                />
+                        <div className="financas-chart-summary" aria-label="Resumo do gráfico">
+                            <div className="financas-chart-summary-row">
+                                <span className="financas-chart-key income"/>
+                                <span>Entradas</span>
+                                <strong>{formatarMoeda(resumo.receitas)}</strong>
                             </div>
-                            <strong>{formatarMoeda(resumo.despesas)}</strong>
+
+                            <div className="financas-chart-summary-row">
+                                <span className="financas-chart-key expense"/>
+                                <span>Saídas</span>
+                                <strong>{formatarMoeda(resumo.despesas)}</strong>
+                            </div>
                         </div>
                     </div>
                 </AppPanel>

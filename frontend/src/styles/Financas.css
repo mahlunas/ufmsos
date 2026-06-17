@@ -56,44 +56,53 @@
     grid-column: 1 / -1;
 }
 
-.financas-chart {
+.financas-chart-shell {
     display: grid;
-    gap: 16px;
+    gap: 14px;
 }
 
-.financas-chart-row {
+.financas-chart-canvas {
+    width: 100%;
+    min-height: 260px;
+}
+
+.financas-chart-summary {
     display: grid;
-    grid-template-columns: 82px minmax(0, 1fr) 112px;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.financas-chart-summary-row {
+    display: flex;
     align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    padding: 0 12px;
     color: var(--app-muted);
     font-size: 0.86rem;
     font-weight: 800;
 }
 
-.financas-chart-row strong {
+.financas-chart-summary-row strong {
+    margin-left: auto;
     color: var(--app-ink);
-    font-size: 0.86rem;
-    text-align: right;
+    font-size: 0.9rem;
 }
 
-.financas-chart-track {
+.financas-chart-key {
+    flex: 0 0 auto;
+    width: 10px;
     height: 10px;
-    overflow: hidden;
     border-radius: 999px;
-    background: #edf2f8;
 }
 
-.financas-chart-bar {
-    height: 100%;
-    border-radius: inherit;
-}
-
-.financas-chart-bar.income {
+.financas-chart-key.income {
     background: var(--app-green);
 }
 
-.financas-chart-bar.expense {
+.financas-chart-key.expense {
     background: var(--app-red);
 }
 
@@ -115,11 +124,7 @@
     .financas-cards,
     .financas-form,
     .financas-content,
-    .financas-chart-row {
+    .financas-chart-summary {
         grid-template-columns: 1fr;
-    }
-
-    .financas-chart-row strong {
-        text-align: left;
     }
 }
