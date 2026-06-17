@@ -22,15 +22,11 @@
 }
 
 .sidebar-logo {
-    display: grid;
-    place-items: center;
     width: 30px;
     height: 30px;
-    border-radius: 8px;
-    color: var(--app-blue);
-    background: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 900;
+    flex: 0 0 auto;
+    display: block;
+    object-fit: contain;
 }
 
 .sidebar-nav {

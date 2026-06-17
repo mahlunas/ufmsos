@@ -69,13 +69,11 @@ export default function Login(){
         <main className="login-page">
             <section className="login-card" aria-labelledby="login-title">
                 <div className="login-brand">
-                    <span>U</span>
+                    <img className="login-brand-logo" src="/favicon.ico" alt="" aria-hidden="true" />
                     <strong>UFMS.O.S</strong>
                 </div>
 
                 <div className="login-copy">
-                    <ShieldCheck size={24} aria-hidden="true"/>
-                    <p>Acesso seguro</p>
                     <h1 id="login-title">Entrar no painel</h1>
                 </div>
 
@@ -87,7 +85,7 @@ export default function Login(){
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
                         autoComplete="email"
-                        placeholder="teste@ufms.br"
+                        placeholder="exemplo@ufmsos.br"
                     />
 
                     <label htmlFor="password">Senha</label>
@@ -97,7 +95,7 @@ export default function Login(){
                         value={senha}
                         onChange={(event) => setSenha(event.target.value)}
                         autoComplete="current-password"
-                        placeholder="Sua senha"
+                        placeholder="********"
                     />
 
                     {erro && <p className="login-error">{erro}</p>}

@@ -2,46 +2,34 @@ import {useEffect, useState} from "react";
 import {LogOut, ShieldCheck, UserRound} from "lucide-react";
 import Button from "../components/Button.tsx";
 import PageHeader from "../components/PageHeader.tsx";
-import {apiRequest} from "../lib/api.ts";
-import {getCurrentUsuarioId} from "../lib/auth.ts";
+import {getCurrentUsuarioEmail, getCurrentUsuarioId, getCurrentUsuarioNome, normalizarTextoExibicao} from "../lib/auth.ts";
 import "../styles/User.css";
 
 type EstudanteApi = {
     id: string;
-    nomeCompleto: string;
-    matricula: string;
     email: string;
+    nomeCompleto: string;
+    matricula?: string | null;
     cursoId?: string | null;
     semestreAtual?: number | null;
 };
 
 export default function User(){
     const estudanteId = getCurrentUsuarioId();
-    const [estudante, setEstudante] = useState<EstudanteApi | null>(null);
-    const [erro, setErro] = useState("");
+    const emailUsuario = getCurrentUsuarioEmail();
+    const nomeUsuario = normalizarTextoExibicao(getCurrentUsuarioNome());
+    const [estudante] = useState<EstudanteApi | null>(estudanteId ? {
+        id: estudanteId,
+        email: emailUsuario ?? "Sem e-mail",
+        nomeCompleto: nomeUsuario ?? "Sem nome cadastrado",
+        matricula: null,
+        cursoId: null,
+        semestreAtual: null,
+    } : null);
 
     useEffect(() => {
-        async function carregar() {
-            if (!estudanteId) {
-                setErro("Usuário autenticado sem identificador de estudante.");
-                return;
-            }
-
-            try {
-                const response = await apiRequest(`/estudantes/${estudanteId}`);
-
-                if (!response.ok) {
-                    throw new Error("Falha ao carregar estudante.");
-                }
-
-                setEstudante(await response.json() as EstudanteApi);
-            } catch {
-                setErro("Não foi possível carregar o perfil do estudante.");
-            }
-        }
-
-        carregar();
-    }, [estudanteId]);
+        document.title = "Perfil do estudante";
+    }, []);
 
     function sair() {
         localStorage.removeItem("ufmsos.token");
@@ -57,8 +45,6 @@ export default function User(){
                 />
             </div>
 
-            {erro && <p className="saude-message">{erro}</p>}
-
             <div className="user-content">
                 <section className="user-card user-profile-card">
                     <div className="user-avatar" aria-hidden="true">
@@ -68,7 +54,7 @@ export default function User(){
                     <div>
                         <h2>{estudante?.nomeCompleto ?? "Sem dados"}</h2>
                         <p>{estudante?.email ?? "Sem e-mail"}</p>
-                        <span>{estudante?.matricula ?? "Sem matrícula"}</span>
+                        <span>{estudante?.matricula ?? "Matrícula não informada"}</span>
                     </div>
                 </section>
 
@@ -81,7 +67,7 @@ export default function User(){
                     <div className="user-security-grid">
                         <div>
                             <ShieldCheck size={18} aria-hidden="true"/>
-                            <span>{estudante?.cursoId ?? "Curso não identificado"}</span>
+                            <span>{estudante?.cursoId ?? "Curso não disponível no backend atual"}</span>
                         </div>
                         <div>
                             <ShieldCheck size={18} aria-hidden="true"/>
