@@ -16,7 +16,22 @@ public class JpaCurriculoRepositoryAdapter implements CurriculoRepository {
 
     @Override
     public Curriculo salvar(Curriculo c) {
-        var entity = new CurriculoEntity(c.id(), c.nomeCompleto(), c.objetivo(), c.competencias(), c.experiencias(), c.estudanteId());
+        CurriculoEntity entity;
+        if (c.id() != null) {
+            entity = repository.findById(c.id())
+                    .orElseGet(CurriculoEntity::new);
+        } else {
+            entity = repository.findByEstudanteId(c.estudanteId())
+                    .orElseGet(CurriculoEntity::new);
+        }
+
+        entity.setId(c.id());
+        entity.setNomeCompleto(c.nomeCompleto());
+        entity.setObjetivo(c.objetivo());
+        entity.setCompetencias(c.competencias());
+        entity.setExperiencias(c.experiencias());
+        entity.setEstudanteId(c.estudanteId());
+
         var saved = repository.save(entity);
         return new Curriculo(saved.getId(), saved.getNomeCompleto(), saved.getObjetivo(), saved.getCompetencias(), saved.getExperiencias(), saved.getEstudanteId());
     }
