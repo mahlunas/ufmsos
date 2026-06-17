@@ -1,6 +1,14 @@
 -- UFMS.O.S. - Schema Inicial de Banco de Dados (PostgreSQL)
 -- Idioma: PT-BR (Conforme Mandato)
 
+-- 0. Módulo: Autenticação e Usuários
+CREATE TABLE IF NOT EXISTS usuario (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha_hash TEXT NOT NULL
+);
+
 -- 1. Módulo: Organização Pedagógica (Estudos)
 CREATE TABLE IF NOT EXISTS curso (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -17,12 +25,11 @@ CREATE TABLE IF NOT EXISTS disciplina (
 );
 
 CREATE TABLE IF NOT EXISTS estudante (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY REFERENCES usuario(id), -- Shared ID approach
     nome_completo VARCHAR(255) NOT NULL,
     matricula VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    curso_id UUID REFERENCES curso(id),
-    senha_hash TEXT NOT NULL
+    curso_id UUID REFERENCES curso(id)
+    -- email e senha_hash removidos (herdado do usuario)
 );
 
 CREATE TABLE IF NOT EXISTS avaliacao (

@@ -6,7 +6,6 @@ public record Estudante(
     UUID id,
     String nomeCompleto,
     String matricula,
-    String email,
     UUID cursoId,
     Integer semestreAtual,
     Integer anoIngresso,

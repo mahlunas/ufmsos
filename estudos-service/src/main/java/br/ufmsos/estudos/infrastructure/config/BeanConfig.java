@@ -62,6 +62,11 @@ public class BeanConfig {
     }
 
     @Bean
+    public CriarEstudanteUseCase criarEstudanteUseCase(final EstudanteRepository repository) {
+        return new CriarEstudanteUseCase(repository);
+    }
+
+    @Bean
     public ToggleConclusaoDisciplinaUseCase toggleConclusaoDisciplinaUseCase(final AvaliacaoRepository repository) {
         return new ToggleConclusaoDisciplinaUseCase(repository);
     }
