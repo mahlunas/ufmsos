@@ -92,3 +92,21 @@ CREATE TABLE IF NOT EXISTS registro_habito (
     habito_id UUID REFERENCES habito(id),
     data_conclusao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 6. Módulo: Engenharia de Currículos
+CREATE TABLE IF NOT EXISTS curriculo (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nome_completo VARCHAR(255) NOT NULL,
+    objetivo TEXT,
+    estudante_id UUID UNIQUE REFERENCES estudante(id)
+);
+
+CREATE TABLE IF NOT EXISTS curriculo_competencias (
+    curriculo_entity_id UUID REFERENCES curriculo(id),
+    competencias VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS curriculo_experiencias (
+    curriculo_entity_id UUID REFERENCES curriculo(id),
+    experiencias VARCHAR(255)
+);
