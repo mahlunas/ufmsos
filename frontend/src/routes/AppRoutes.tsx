@@ -1,6 +1,7 @@
 import {BrowserRouter, Navigate, Outlet, Routes, Route} from "react-router-dom"
 import Home from "../pages/Home.tsx";
 import Login from "../pages/Login.tsx";
+import Cadastro from "../pages/Cadastro.tsx";
 import User from "../pages/User.tsx";
 import Estagio from "../pages/Estagio.tsx";
 import Saude from "../pages/Saude.tsx";
@@ -24,6 +25,7 @@ export default function AppRoutes(){
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Login />}/>
+                <Route path="/cadastro" element={<Cadastro />}/>
 
                 <Route element={<ProtectedRoute/>}>
                     <Route element={<MainLayout/>}>

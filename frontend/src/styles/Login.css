@@ -44,18 +44,11 @@
     color: var(--app-blue);
 }
 
-.login-copy p,
 .login-copy h1,
 .login-form label,
-.login-error {
+.login-error,
+.login-success {
     margin: 0;
-}
-
-.login-copy p {
-    color: var(--app-blue);
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-transform: uppercase;
 }
 
 .login-copy h1 {
@@ -95,4 +88,31 @@
     background: #fff0f0;
     font-size: 0.86rem;
     font-weight: 800;
+}
+
+.login-success {
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #1f6b45;
+    background: #effaf3;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.login-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    border-radius: 999px;
+    color: var(--app-ink);
+    background: #eef3fb;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.login-secondary-action:focus-visible {
+    outline: 3px solid rgba(33, 103, 200, 0.22);
 }

@@ -1,16 +1,18 @@
 import {useEffect, useState} from "react";
 import type {FormEvent} from "react";
-import {useNavigate} from "react-router-dom";
-import {ArrowRight, LockKeyhole, ShieldCheck} from "lucide-react";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {ArrowRight, LockKeyhole, UserPlus} from "lucide-react";
 import Button from "../components/Button.tsx";
 import {apiRequest} from "../lib/api.ts";
 import "../styles/Login.css";
 
 export default function Login(){
     const navigate = useNavigate();
+    const location = useLocation();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [erro, setErro] = useState("");
+    const mensagem = (location.state as { mensagem?: string } | null)?.mensagem;
     const [carregando, setCarregando] = useState(false);
 
     useEffect(() => {
@@ -99,11 +101,17 @@ export default function Login(){
                     />
 
                     {erro && <p className="login-error">{erro}</p>}
+                    {mensagem && !erro && <p className="login-success">{mensagem}</p>}
 
                     <Button icon={carregando ? LockKeyhole : ArrowRight} type="submit" variant="primary" disabled={carregando}>
                         {carregando ? "Entrando..." : "Entrar"}
                     </Button>
                 </form>
+
+                <Link className="login-secondary-action" to="/cadastro">
+                    <UserPlus size={17} aria-hidden="true"/>
+                    <span>Criar conta</span>
+                </Link>
             </section>
         </main>
     )
