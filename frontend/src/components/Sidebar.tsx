@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import {BriefcaseBusiness, GraduationCap, HeartPulse, Home, Landmark, Send, User} from "lucide-react";
+import {BriefcaseBusiness, GraduationCap, HeartPulse, Home, Landmark, User} from "lucide-react";
 import "./Sidebar.css";
 
 const links = [
@@ -7,7 +7,6 @@ const links = [
     {to: "/estudos", label: "Estudos", icon: GraduationCap},
     {to: "/financas", label: "Finanças", icon: Landmark},
     {to: "/estagio", label: "Estágio", icon: BriefcaseBusiness},
-    {to: "/candidaturas", label: "Candidaturas", icon: Send},
     {to: "/saude", label: "Saúde", icon: HeartPulse},
     {to: "/user", label: "Perfil", icon: User},
 ];
